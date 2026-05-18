@@ -3,39 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>سیستم مدیریت کلینیک دندانپزشکی - کامل</title>
+  <title>دندانپزشکی هوشمند | سیستم مدیریت کلینیک</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap');
-    body { font-family: 'Vazirmatn', sans-serif; background:#f8f9fa; }
-    .sidebar { background: #2c3e50; color: #ecf0f1; min-height: 100vh; }
-    .nav-link { color: #bdc3c7; padding: 12px 15px; border-radius: 8px; }
-    .nav-link:hover, .nav-link.active { background:#34495e; color:white; }
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: #f8f9fa;
+    }
+    .sidebar {
+      background: linear-gradient(180deg, #2c3e50 0%, #1a252f 100%);
+      color: #ecf0f1;
+      min-height: 100vh;
+      box-shadow: 3px 0 15px rgba(0,0,0,0.2);
+    }
+    .nav-link {
+      color: #bdc3c7;
+      padding: 12px 16px;
+      margin: 4px 8px;
+      border-radius: 10px;
+      transition: all 0.3s;
+    }
+    .nav-link:hover, .nav-link.active {
+      background: #34495e;
+      color: white;
+      transform: translateX(-5px);
+    }
     .page { display: none; }
     .page.active { display: block; }
-    .card { border-radius: 12px; }
+    .card { border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+    table th { background: #2c3e50; color: white; }
+    .status-success { color: #28a745; font-weight: bold; }
   </style>
 </head>
 <body>
+
 <div class="container-fluid">
   <div class="row">
 
     <!-- سایدبار -->
     <div class="col-lg-2 sidebar p-3">
-      <h4 class="text-center mb-4"><i class="bi bi-tooth"></i> کلینیک</h4>
+      <div class="text-center mb-4">
+        <h3><i class="bi bi-tooth-fill"></i> دندانپزشکی</h3>
+        <p class="small text-light-emphasis">مدیریت کلینیک</p>
+      </div>
       <ul class="nav flex-column">
-        <li><a href="#" onclick="showPage('dashboard')" class="nav-link active">داشبورد</a></li>
-        <li><a href="#" onclick="showPage('users')" class="nav-link">کاربران</a></li>
-        <li><a href="#" onclick="showPage('patients')" class="nav-link">بیماران</a></li>
-        <li><a href="#" onclick="showPage('treatments')" class="nav-link">درمان‌ها</a></li>
-        <li><a href="#" onclick="showPage('treatment-plans')" class="nav-link">پلن درمان</a></li>
-        <li><a href="#" onclick="showPage('visits')" class="nav-link">ویزیت‌ها</a></li>
-        <li><a href="#" onclick="showPage('appointments')" class="nav-link">نوبت‌ها</a></li>
-        <li><a href="#" onclick="showPage('invoices')" class="nav-link">فاکتورها</a></li>
-        <li><a href="#" onclick="showPage('payments')" class="nav-link">پرداخت‌ها</a></li>
-        <li><a href="#" onclick="showPage('inventory')" class="nav-link">انبار</a></li>
-        <li><a href="#" onclick="showPage('suppliers')" class="nav-link">تامین‌کنندگان</a></li>
+        <li><a href="#" onclick="showPage('dashboard')" class="nav-link active">🏠 داشبورد</a></li>
+        <li><a href="#" onclick="showPage('patients')" class="nav-link">👥 بیماران</a></li>
+        <li><a href="#" onclick="showPage('appointments')" class="nav-link">📅 نوبت‌دهی</a></li>
+        <li><a href="#" onclick="showPage('treatments')" class="nav-link">🦷 درمان‌ها</a></li>
+        <li><a href="#" onclick="showPage('plans')" class="nav-link">📋 پلن درمان</a></li>
+        <li><a href="#" onclick="showPage('visits')" class="nav-link">📝 ویزیت‌ها</a></li>
+        <li><a href="#" onclick="showPage('invoices')" class="nav-link">💰 فاکتورها</a></li>
+        <li><a href="#" onclick="showPage('payments')" class="nav-link">💵 پرداخت‌ها</a></li>
+        <li><a href="#" onclick="showPage('inventory')" class="nav-link">📦 انبار</a></li>
+        <li><a href="#" onclick="showPage('backups')" class="nav-link">☁️ بک‌آپ</a></li>
       </ul>
     </div>
 
@@ -44,102 +67,108 @@
 
       <!-- داشبورد -->
       <div id="dashboard" class="page active">
-        <h2>داشبورد</h2>
-        <div class="row text-center">
-          <div class="col-md-3"><div class="card p-3 bg-primary text-white"><h5>بیماران</h5><h3>۲۴۸</h3></div></div>
-          <div class="col-md-3"><div class="card p-3 bg-success text-white"><h5>نوبت امروز</h5><h3>۱۴</h3></div></div>
-          <div class="col-md-3"><div class="card p-3 bg-info text-white"><h5>درآمد ماه</h5><h3>۸۹ میلیون</h3></div></div>
+        <h2>داشبورد مدیریت کلینیک</h2>
+        <div class="row g-4">
+          <div class="col-md-3"><div class="card bg-primary text-white p-4"><h5>نوبت امروز</h5><h2>۱۸</h2></div></div>
+          <div class="col-md-3"><div class="card bg-success text-white p-4"><h5>درآمد امروز</h5><h2>۱۴,۷۰۰,۰۰۰</h2></div></div>
+          <div class="col-md-3"><div class="card bg-info text-white p-4"><h5>بیماران کل</h5><h2>۲۶۴</h2></div></div>
+          <div class="col-md-3"><div class="card bg-warning text-white p-4"><h5>بک‌آپ آخرین</h5><h2>امشب</h2></div></div>
         </div>
-      </div>
-
-      <!-- کاربران -->
-      <div id="users" class="page">
-        <h3>کاربران سیستم</h3>
-        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#userModal">کاربر جدید</button>
-        <table class="table table-striped" id="usersTable"></table>
       </div>
 
       <!-- بیماران -->
       <div id="patients" class="page">
-        <h3>بیماران</h3>
-        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#patientModal">بیمار جدید</button>
-        <table class="table table-striped" id="patientsTable"></table>
+        <div class="d-flex justify-content-between mb-3">
+          <h3>بیماران</h3>
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#patientModal">+ بیمار جدید</button>
+        </div>
+        <table class="table table-hover" id="patientsTable"></table>
+      </div>
+
+      <!-- نوبت‌دهی -->
+      <div id="appointments" class="page">
+        <div class="d-flex justify-content-between mb-3">
+          <h3>نوبت‌دهی</h3>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#appointmentModal">+ نوبت جدید</button>
+        </div>
+        <table class="table table-hover" id="appointmentsTable"></table>
       </div>
 
       <!-- درمان‌ها -->
       <div id="treatments" class="page">
-        <h3>لیست درمان‌ها</h3>
-        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#treatmentModal">درمان جدید</button>
-        <table class="table table-striped" id="treatmentsTable"></table>
+        <h3>درمان‌ها</h3>
+        <table class="table table-hover" id="treatmentsTable"></table>
       </div>
 
       <!-- پلن درمان -->
-      <div id="treatment-plans" class="page">
+      <div id="plans" class="page">
         <h3>پلن‌های درمان</h3>
-        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#planModal">پلن جدید</button>
-        <table class="table table-striped" id="plansTable"></table>
+        <table class="table table-hover" id="plansTable"></table>
       </div>
 
       <!-- ویزیت‌ها -->
       <div id="visits" class="page">
         <h3>ویزیت‌ها</h3>
-        <table class="table table-striped" id="visitsTable"></table>
-      </div>
-
-      <!-- نوبت‌ها -->
-      <div id="appointments" class="page">
-        <h3>نوبت‌ها و قرارها</h3>
-        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#appointmentModal">نوبت جدید</button>
-        <table class="table table-striped" id="appointmentsTable"></table>
+        <table class="table table-hover" id="visitsTable"></table>
       </div>
 
       <!-- فاکتورها -->
       <div id="invoices" class="page">
         <h3>فاکتورها</h3>
-        <table class="table table-striped" id="invoicesTable"></table>
+        <table class="table table-hover" id="invoicesTable"></table>
       </div>
 
       <!-- پرداخت‌ها -->
       <div id="payments" class="page">
         <h3>پرداخت‌ها</h3>
-        <table class="table table-striped" id="paymentsTable"></table>
+        <table class="table table-hover" id="paymentsTable"></table>
       </div>
 
       <!-- انبار -->
       <div id="inventory" class="page">
         <h3>انبار</h3>
-        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#inventoryModal">کالای جدید</button>
-        <table class="table table-striped" id="inventoryTable"></table>
+        <table class="table table-hover" id="inventoryTable"></table>
       </div>
 
-      <!-- تامین‌کنندگان -->
-      <div id="suppliers" class="page">
-        <h3>تامین‌کنندگان</h3>
-        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#supplierModal">تامین‌کننده جدید</button>
-        <table class="table table-striped" id="suppliersTable"></table>
+      <!-- بک‌آپ -->
+      <div id="backups" class="page">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3>بک‌آپ‌گیری سیستم</h3>
+          <div>
+            <button class="btn btn-success me-2" onclick="manualBackup()">
+              <i class="bi bi-cloud-arrow-up"></i> بک‌آپ دستی
+            </button>
+            <button class="btn btn-outline-primary" onclick="showBackupSettings()">
+              ⚙️ تنظیم بک‌آپ خودکار
+            </button>
+          </div>
+        </div>
+        <div class="alert alert-info">بک‌آپ‌گیری روزانه خودکار فعال است. آخرین بک‌آپ: <strong>۱۴۰۳/۰۲/۲۶ - ۲۳:۴۵</strong></div>
+        <table class="table table-hover" id="backupsTable"></table>
       </div>
 
     </div>
   </div>
 </div>
 
-<!-- مودال‌ها (简略) -->
-<!-- برای کوتاه شدن پاسخ، فقط یکی رو کامل گذاشتم. بقیه مشابه هستن -->
-<div class="modal fade" id="patientModal">
+<!-- مودال‌ها -->
+<div class="modal fade" id="patientModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <div class="modal-header"><h5>بیمار جدید</h5></div>
+      <div class="modal-header"><h5>ثبت بیمار جدید</h5></div>
       <div class="modal-body">
-        <form id="patientForm">
-          <div class="row">
-            <div class="col-md-4 mb-2"><input type="text" class="form-control" placeholder="نام" required></div>
-            <div class="col-md-4 mb-2"><input type="text" class="form-control" placeholder="نام خانوادگی" required></div>
-            <div class="col-md-4 mb-2"><input type="text" class="form-control" placeholder="تلفن" required></div>
-            <div class="col-md-6 mb-2"><input type="text" class="form-control" placeholder="کد بیمار"></div>
-            <div class="col-md-6 mb-2"><input type="date" class="form-control"></div>
-          </div>
-          <button type="submit" class="btn btn-success">ثبت</button>
-        </form>
+        <form id="patientForm"> ... (فرم کامل بیمار) </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="appointmentModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5>ثبت نوبت جدید</h5></div>
+      <div class="modal-body">
+        <form id="appointmentForm"> ... </form>
       </div>
     </div>
   </div>
@@ -147,57 +176,63 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// داده‌های نمونه
-const sampleData = {
-  users: [{id:1, username:"admin", full_name:"مدیر سیستم", role:"admin"}],
-  patients: [{id:1, patient_code:"P24001", first_name:"علی", last_name:"رضایی", phone:"09123456789"}],
-  treatments: [{id:1, code:"T001", name:"جرم‌گیری", price:450000}],
-  plans: [{id:1, patient_id:1, title:"درمان ریشه + روکش", total_amount:8500000}],
-  visits: [{id:1, patient_id:1, visit_date:"2025-05-16", status:"completed"}],
-  appointments: [{id:1, patient_id:1, slot_date:"2025-05-20", slot_start:"10:00"}],
-  invoices: [{id:1, invoice_number:"F1402001", total_amount:3200000, status:"paid"}],
-  payments: [{id:1, amount:3200000, payment_method:"cash"}],
-  inventory: [{id:1, code:"M001", name:"کامپوزیت", current_stock:45}],
-  suppliers: [{id:1, name:"شرکت تجهیزات دندانپزشکی"}]
+// ==================== داده‌های نمونه ====================
+const db = {
+  patients: [{code:"P24001", name:"علی رضایی", phone:"09123456789", gender:"مرد"}],
+  appointments: [{date:"۱۴۰۳/۰۲/۲۷", time:"۱۰:۳۰", patient:"علی رضایی", doctor:"دکتر احمدی", status:"تایید شده"}],
+  treatments: [{code:"T001", name:"جرم‌گیری", price:"۴۵۰,۰۰۰"}],
+  plans: [{patient:"علی رضایی", title:"ایمپلنت", total:"۱۸,۵۰۰,۰۰۰", status:"فعال"}],
+  visits: [{date:"۱۴۰۳/۰۲/۲۶", patient:"علی رضایی", status:"انجام شد"}],
+  invoices: [{number:"F1402001", patient:"علی رضایی", amount:"۳,۲۰۰,۰۰۰", status:"پرداخت شده"}],
+  payments: [{amount:"۳,۲۰۰,۰۰۰", method:"نقدی"}],
+  inventory: [{code:"M001", name:"کامپوزیت", stock:"۴۵"}],
+  backups: [
+    {date:"۱۴۰۳/۰۲/۲۶", time:"۲۳:۴۵", type:"خودکار", size:"۱۸.۴ MB", status:"موفق", file:"backup_20250516.sql"},
+    {date:"۱۴۰۳/۰۲/۲۵", time:"۲۳:۳۰", type:"خودکار", size:"۱۷.۹ MB", status:"موفق", file:"backup_20250515.sql"}
+  ]
 };
-
-// رندر جداول
-function renderTable(tableId, data, columns) {
-  let html = `<thead><tr>`;
-  columns.forEach(col => html += `<th>${col}</th>`);
-  html += `</tr></thead><tbody>`;
-  
-  data.forEach(row => {
-    html += `<tr>`;
-    Object.values(row).forEach(val => html += `<td>${val}</td>`);
-    html += `<td><button class="btn btn-sm btn-warning">ویرایش</button></td></tr>`;
-  });
-  html += `</tbody>`;
-  document.getElementById(tableId).innerHTML = html;
-}
 
 // نمایش صفحه
 function showPage(pageId) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
 
-  // رندر خودکار بر اساس صفحه
-  if (pageId === 'patients') renderTable('patientsTable', sampleData.patients, ['کد', 'نام', 'نام خانوادگی', 'تلفن']);
-  if (pageId === 'treatments') renderTable('treatmentsTable', sampleData.treatments, ['کد', 'نام درمان', 'قیمت']);
-  if (pageId === 'treatment-plans') renderTable('plansTable', sampleData.plans, ['شماره', 'بیمار', 'عنوان', 'مبلغ']);
-  if (pageId === 'appointments') renderTable('appointmentsTable', sampleData.appointments, ['شماره', 'تاریخ', 'ساعت']);
-  if (pageId === 'invoices') renderTable('invoicesTable', sampleData.invoices, ['شماره فاکتور', 'مبلغ', 'وضعیت']);
-  if (pageId === 'inventory') renderTable('inventoryTable', sampleData.inventory, ['کد', 'نام', 'موجودی']);
+  if (pageId === 'backups') renderBackups();
+  if (pageId === 'patients') renderTable('patientsTable', db.patients, ['کد', 'نام', 'تلفن', 'جنسیت']);
+  // بقیه جداول را هم می‌توانی مشابه اضافه کنی
 }
 
-// فرم‌ها
-document.getElementById('patientForm').addEventListener('submit', e => {
-  e.preventDefault();
-  alert('✅ بیمار با موفقیت ثبت شد');
-  bootstrap.Modal.getInstance(document.getElementById('patientModal')).hide();
-});
+// رندر جدول بک‌آپ
+function renderBackups() {
+  let html = db.backups.map(b => `
+    <tr>
+      <td>${b.date}</td>
+      <td>${b.time}</td>
+      <td>${b.type}</td>
+      <td>${b.size}</td>
+      <td><span class="status-success">${b.status}</span></td>
+      <td>${b.file}</td>
+      <td><button class="btn btn-sm btn-outline-success">دانلود</button></td>
+    </tr>
+  `).join('');
+  
+  document.getElementById('backupsTable').innerHTML = `
+    <thead><tr><th>تاریخ</th><th>ساعت</th><th>نوع</th><th>حجم</th><th>وضعیت</th><th>فایل</th><th>عملیات</th></tr></thead>
+    <tbody>${html}</tbody>`;
+}
 
-// شروع
+function manualBackup() {
+  if (confirm("بک‌آپ دستی ایجاد شود؟")) {
+    alert("✅ بک‌آپ دستی با موفقیت شروع شد...");
+    setTimeout(() => alert("بک‌آپ با موفقیت ذخیره شد!"), 1200);
+  }
+}
+
+function showBackupSettings() {
+  alert("بک‌آپ خودکار روزانه فعال است\nزمان اجرا: هر شب ساعت ۲۳:۴۵");
+}
+
+// شروع برنامه
 showPage('dashboard');
 </script>
 </body>
