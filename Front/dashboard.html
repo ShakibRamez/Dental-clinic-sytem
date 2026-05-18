@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>داشبورد - دندانپزشکی</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap');
+    
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: #f8f9fa;
+    }
+    .dashboard-card {
+      border-radius: 16px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.08);
+      transition: all 0.3s;
+    }
+    .dashboard-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+    }
+    .chart-container {
+      position: relative;
+      height: 320px;
+    }
+  </style>
+</head>
+<body class="p-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-speedometer2"></i> داشبورد مدیریت</h2>
+    <div class="text-muted">امروز: <span id="currentDate" class="fw-bold"></span></div>
+  </div>
+
+  <!-- آمار اصلی -->
+  <div class="row g-4 mb-5">
+    <div class="col-xl-3 col-md-6">
+      <div class="dashboard-card card bg-primary text-white h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="opacity-75">نوبت‌های امروز</h6>
+              <h2 class="stat-number mb-0" id="todayAppointments">18</h2>
+            </div>
+            <i class="bi bi-calendar-check fs-1 opacity-75"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+      <div class="dashboard-card card bg-success text-white h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="opacity-75">درآمد امروز</h6>
+              <h2 class="stat-number mb-0" id="todayRevenue">۱۴,۷۰۰,۰۰۰</h2>
+            </div>
+            <i class="bi bi-currency-dollar fs-1 opacity-75"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+      <div class="dashboard-card card bg-info text-white h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="opacity-75">بیماران جدید</h6>
+              <h2 class="stat-number mb-0" id="newPatients">۷</h2>
+            </div>
+            <i class="bi bi-person-plus fs-1 opacity-75"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+      <div class="dashboard-card card bg-warning text-white h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="opacity-75">موجودی کم انبار</h6>
+              <h2 class="stat-number mb-0" id="lowStock">۵</h2>
+            </div>
+            <i class="bi bi-exclamation-triangle fs-1 opacity-75"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- نمودار درآمد ماهانه -->
+    <div class="col-xl-8">
+      <div class="card dashboard-card">
+        <div class="card-header bg-white">
+          <h5>روند درآمد ۳۰ روز اخیر</h5>
+        </div>
+        <div class="card-body">
+          <div class="chart-container">
+            <canvas id="revenueChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- اطلاعات سریع -->
+    <div class="col-xl-4">
+      <div class="card dashboard-card h-100">
+        <div class="card-header bg-white">
+          <h5>نوبت‌های امروز</h5>
+        </div>
+        <div class="card-body" id="todayAppointmentsList">
+          <!-- با JS پر می‌شود -->
+        </div>
+      </div>
+
+      <!-- آخرین بک‌آپ -->
+      <div class="card dashboard-card mt-4">
+        <div class="card-body">
+          <h5 class="mb-3">آخرین بک‌آپ</h5>
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-cloud-check fs-1 text-success"></i>
+            <div>
+              <h6 class="mb-1">بک‌آپ خودکار روزانه</h6>
+              <p class="text-muted mb-0">۱۴۰۳/۰۲/۲۶ - ۲۳:۴۵</p>
+              <small class="text-success">موفق • ۱۸.۴ مگابایت</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// نمایش تاریخ امروز
+document.getElementById('currentDate').textContent = new Intl.DateTimeFormat('fa-IR').format(new Date());
+
+// نمودار درآمد
+const ctx = document.getElementById('revenueChart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['۵ روز پیش', '۴', '۳', '۲', '۱', 'امروز'],
+    datasets: [{
+      label: 'درآمد (تومان)',
+      data: [8500000, 9200000, 7800000, 89821323, 3123123123, 14700000],
+      borderColor: '#0d6efd',
+      backgroundColor: 'rgba(13, 110, 253, 0.1)',
+      tension: 0.4,
+      borderWidth: 3,
+      pointRadius: 5
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { ticks: { callback: value => (value/1000000) + 'M' } }
+    }
+  }
+});
+
+// نوبت‌های امروز
+const todayAppointments = [
+  {time: "09:30", patient: "علی رضایی", treatment: "جرم‌گیری"},
+  {time: "10:00", patient: "زهرا محمدی", treatment: "عصب‌کشی"},
+  {time: "11:30", patient: "محمد احمدی", treatment: "لمینت"},
+  {time: "14:00", patient: "سارا کریمی", treatment: "کشیدن دندان"}
+];
+
+let html = '';
+todayAppointments.forEach(app => {
+  html += `
+    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+      <div>
+        <strong>${app.time}</strong> - ${app.patient}
+      </div>
+      <small class="text-muted">${app.treatment}</small>
+    </div>`;
+});
+document.getElementById('todayAppointmentsList').innerHTML = html;
+</script>
+
+</body>
+</html>
