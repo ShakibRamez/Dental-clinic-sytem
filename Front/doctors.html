@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Doctor</title>
+</head>
+<body>
+
+    
+    <p id="logo">logo</p>
+    
+    <div class="d-container">
+        <header>
+            <div class="search">
+                <label>Search medicines</label>
+                <input type="text" id="search-box" placeholder="Search here....">
+            </div>
+        </header>
+
+    <div id="list">
+        <span id="title">List Of Medicines</span>
+        <table id="table">
+            <thead class="table-head" id="table-head">
+                <tr>
+                    <td>Name</td>
+                    <td>Company</td>
+                    <td>Type</td>
+                    <td>Dosage</td>
+                    <td>Applying</td>
+                    <td>Remove</td>
+                </tr>
+            </thead>
+
+            <tbody class="table-body" id="table-body">
+                <tr>
+                    <td>Paracetamol</td>
+                    <td>abcd</td>
+                    <td><select id="select">
+                        <option value="tablet">Tablet</option>
+                        <option value="Injection">Injection</option>
+                        <option value="Syrup">Syrup</option>
+                        <option value="Drop">Drop</option>
+                    </select></td>
+                    <td>500mg</td>
+                    <td><input type="checkbox"></td>
+                    <td class="remove-med">Remove</td>
+                </tr>
+                <tr>
+                    <td>Flagyl</td>
+                    <td>abcd</td>
+                    <td><select id="select">
+                        <option value="tablet">Tablet</option>
+                        <option value="Injection">Injection</option>
+                        <option value="Syrup">Syrup</option>
+                        <option value="Drop">Drop</option>
+                    </select></td>
+                    <td>200mg</td>
+                    <td><input type="checkbox"></td>
+                    <td class="remove-med">Remove</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p id="h2">Patient Info</p>
+        <div id="patient-inf">
+            <label>Name:</label>
+            <input type="text" id="p-name-in">
+            <label>Gender:</label>
+            <select id="sel-gen">
+                <option value="Male">Male</option>
+                <option value="Female">ِFemale</option>
+                <option value="Other">Other</option>
+            </select>
+            <label>Age:</label>
+            <input type="number" value="0" id="p-age-in">
+            <label>Phone No.</label>
+            <input type="text" id="p-phone-in">
+        </div>
+
+        <div class="pat-desc">
+            <label >Description</label>
+            <textarea id="description"></textarea>
+        </div>
+
+        <button id="sub-pres">Submit</button>
+    </div>
+
+    
+
+    <div class="add">
+        <p class="add-title">Add a medicine</p>
+
+        <div class="sub-add">
+            <label id="sub-label">Medicine Name</label>
+            <input type="text" placeholder="Medicine name" id="add-name">
+        </div>
+
+        <div class="sub-add">
+            <label id="sub-label">Company</label>
+            <input type="text" placeholder="Company" id="add-comp">
+        </div>
+
+        <div class="sub-add sub-select">
+            <label id="sub-label">Type</label>
+            <select id="select">
+                <option value="tablet">Tablet</option>
+                <option value="Injection">Injection</option>
+                <option value="Syrup">Syrup</option>
+                <option value="Drop">Drop</option>
+            </select>
+        </div>
+
+        <div class="sub-add">
+            <label id="sub-label">Dosage</label>
+            <input type="text" placeholder="Dosage" id="add-Dose">
+        </div>
+
+        <button id="add-med">Add</button>
+
+    </div>
+
+    </div>
+
+
+    
+    <script>
+        const tableBody = document.getElementById('table-body');
+        const searchBox = document.getElementById('search-box');
+        const addButton = document.getElementById('add-med');
+        const removeButton = document.querySelectorAll('remove-med');
+        const prescList = document.querySelector('p-presc');
+
+
+        searchBox.addEventListener('keyup', (e) => {
+
+            let medList = tableBody.querySelectorAll('tr');
+
+            medList.forEach(element => {
+                if(element.children[0].textContent.toLowerCase().indexOf(searchBox.value.toLowerCase()) === -1){
+                    element.style.display = 'none';
+                }else{
+                    element.style.display = 'table-row';
+                }
+            });
+
+
+            e.preventDefault()
+        });
+
+
+        addButton.addEventListener('click',(e) => {
+
+            let medList = tableBody.querySelectorAll('tr');
+
+            const medName = document.getElementById('add-name');
+            const medComp = document.getElementById('add-comp');
+            const medDose = document.getElementById('add-Dose');
+
+            if(medName.value != '' && medComp.value != '' && medDose.value != ''){
+                tableBody.innerHTML += `
+                    <td>${medName.value}</td>
+                    <td>${medComp.value}</td>
+                    <td>
+                        <select id="select">
+                            <option value="tablet">Tablet</option>
+                            <option value="Injection">Injection</option>
+                            <option value="Syrup">Syrup</option>
+                            <option value="Drop">Drop</option>
+                        </select>
+                    </td>
+                    <td>${medDose.value}</td>
+                    <td><input type="checkbox"></td>
+                    <td class="remove-med">Remove</td>`;
+
+                addToLocalStorage('medName', medName.value);
+                addToLocalStorage('medComp', medComp.value);
+                addToLocalStorage('medDose', medDose.value);
+
+                medName.value = '';
+                medComp.value = '';
+                medDose.value = '';
+
+            }else{
+                window.alert('Specify the med');
+            }
+
+            e.preventDefault();
+        });
+
+
+        tableBody.addEventListener('click', (e) => {
+            if(e.target.className === "remove-med"){
+                const name = e.target.parentElement.children[0].textContent;
+                const comp = e.target.parentElement.children[1].textContent;
+                const dose = e.target.parentElement.children[3].textContent;
+
+                e.target.parentElement.remove();
+
+                removeFromLocalStorage('medName', name);
+                removeFromLocalStorage('medComp', comp);
+                removeFromLocalStorage('medDose', dose);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', (e) => {
+
+            let medList = tableBody.querySelectorAll('tr');
+
+            let medName;
+            let medComp;
+            let medDose;
+
+            if(localStorage.getItem('medName') === null){
+                medName = []
+                medComp = []
+                medDose = []
+            }else{
+                medName = localStorage.getItem('medName').split(',');
+                medComp = localStorage.getItem('medComp').split(',');
+                medDose = localStorage.getItem('medDose').split(',');
+            }
+
+            for(let t = 0; t < medName.length; t++){
+                tableBody.innerHTML += `
+                    <td>${medName[t]}</td>
+                    <td>${medComp[t]}</td>
+                    <td>
+                        <select id="select">
+                            <option value="tablet">Tablet</option>
+                            <option value="Injection">Injection</option>
+                            <option value="Syrup">Syrup</option>
+                            <option value="Drop">Drop</option>
+                        </select>
+                    </td>
+                    <td>${medDose[t]}</td>
+                    <td><input type="checkbox"></td>
+                    <td class="remove-med">Remove</td>`;
+            }
+            e.preventDefault();
+        });
+
+        function addToLocalStorage(key, task){
+
+            let tasks;
+
+            if(localStorage.getItem(key) === null){
+                tasks = [];
+            }else{
+                tasks = localStorage.getItem(key).split(',');
+            }
+
+            tasks.push(task);
+
+            localStorage.setItem(key, tasks)
+
+        }
+
+        function removeFromLocalStorage(key, task){
+            let tasks;
+
+            if(localStorage.getItem(key) === null){
+                tasks = [];
+            }else{
+                tasks = localStorage.getItem(key).split(',');
+            }
+
+            for(let t = 0; t < tasks.length; t++){
+                if(tasks[t] === task){
+                    tasks.splice(t,1);
+                }
+            }
+
+            localStorage.setItem(key, tasks);
+
+            if(tasks.length === 0){
+                localStorage.clear();
+            }
+        }
+
+    </script>
+
+</body>
+</html>

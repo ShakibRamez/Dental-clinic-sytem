@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/style.css" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Patients List</title>
+    <style>
+        .pl-container{
+            width: 90%;
+            float: right;
+            margin: 10px 20px;
+            padding: 20px;
+        }
+        .search-pat label{
+            display: block;
+            float: right;
+            font-size: xx-large;
+        }
+        #pat-search-box {
+            height: 40px;
+            width: 60%;
+            float: right;
+            margin-right: 10px;
+            text-align: right;
+            border-radius: 20px;
+            padding-right: 15px;
+            font-size: large;
+            
+        }
+        .butn{
+            width: 100%;
+            display: flex;
+            justify-content: end;
+        }
+        #btn{
+            background-color: #0325a9;
+            color: white;
+            font-size: larger;
+            border: 1px solid ;
+            border-radius: 8px;
+            padding: 0px 10px 5px 10px;
+            margin-right: 30px;
+            margin-top: 30px;
+            cursor: pointer;
+        }
+        #btn:active{
+            background-color: #000000;
+        }
+        #table-container {
+            float: right;
+            width: 90%;
+            text-align: right;
+            border: 1px dotted #333;
+            border-radius: 12px;
+            padding: 5px 20px 30px 20px;
+            margin-top: 5px;
+            box-shadow: 0px 5px 25px rgba(0,0,0,0.16);
+        }
+        #patient-list {
+            width: 100%;
+        }
+        #patient-list-body {
+            cursor: pointer;
+        }
+        td, th{
+            border-bottom: 1px dotted #666;
+        }
+        #edit-btn{
+            background-color: #e06000;
+            color: white;
+            font-size: large;
+            border: 1px solid ;
+            border-radius: 8px;
+            padding: 0px 10px 5px 10px;
+            cursor: pointer;
+        }
+        #edit-btn:active{
+            background-color: #d06000;
+        }
+        </style>
+</head>
+<body>
+    <div class="pl-container">
+        <div class="search-pat">
+            <label>جستجوی بیماران</label>
+            <input type="text" id="pat-search-box" placeholder="جستجو">
+        </div>
+        <div class="butn">
+            <button id="btn">بیمار جدید</button>
+        </div>
+        <div id="table-container">
+            <h1 style="margin-top: 0px;">لیست بیماران</h1>
+            <table id="patient-list">
+                <thead id="patient-list-head">
+                    <tr>
+                        <th></th>
+                        <th>تاریخ مراجعه</th>
+                        <th>تلفن</th>
+                        <th>جنسیت</th>
+                        <th>سن</th>
+                        <th>نام</th>
+                        <th>آیدی</th>
+                    </tr>
+                </thead>
+                <tbody id="patient-list-body">
+                    <tr>
+                        <td><button id="edit-btn">ویرایش</button></td>
+                        <td>2026-04-23</td>
+                        <td>0700000000</td>
+                        <td>مرد</td>
+                        <td>22</td>
+                        <td>احمد احمدی</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td><button id="edit-btn">ویرایش</button></td>
+                        <td>2026-05-05</td>
+                        <td>0799999999</td>
+                        <td>زن</td>
+                        <td>18</td>
+                        <td>فاطمه کریمی</td>
+                        <td>2</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"> 
+        const patientSearchBox = document.getElementById('pat-search-box');
+        const patientTableBody = document.getElementById('patient-list-body');
+        const addButton = document.querySelector('.btn');
+        
+        patientSearchBox.addEventListener('keyup', (e) => {
+
+            let medList = patientTableBody.querySelectorAll('tr');
+
+            medList.forEach(element => {
+                if(element.children[element.children.length - 2].textContent.toLowerCase().indexOf(patientSearchBox.value.toLowerCase()) === -1){
+                    element.style.display = 'none';
+                }else{
+                    element.style.display = 'table-row';
+                }
+            });
+            e.preventDefault()
+        });
+
+        patientTableBody.addEventListener('click', (e) => {
+            console.log(e.target.parentElement.children[1].textContent);
+
+            window.location.href = 'patients_Details.html'
+
+            e.preventDefault()
+    });
+
+    addButton.addEventListener('click', (e) => {
+        
+        renderTable('patientsTable', sampleData.patients, ['کد', 'نام', 'نام خانوادگی', 'تلفن']);
+        e.preventDefault();
+    });
+    </script>
+</body>
+</html>
