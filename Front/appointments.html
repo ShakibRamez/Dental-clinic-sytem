@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نوبت‌دهی - کلینیک دندانپزشکی</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: linear-gradient(135deg, #f0f4f8 0%, #e6edf7 100%);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 20px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+    }
+    .header-gradient {
+      background: linear-gradient(135deg, #2c3e50, #1e88e5);
+      color: white;
+    }
+    .time-slot {
+      transition: all 0.3s;
+    }
+    .time-slot:hover {
+      background: #e3f2fd;
+      transform: scale(1.05);
+    }
+    .booked {
+      background: #ffebee;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body class="p-4">
+
+  <div class="header-gradient p-4 rounded-4 mb-4 text-center">
+    <h2 class="fw-bold mb-1">📅 سیستم نوبت‌دهی</h2>
+    <p class="mb-0">کلینیک دندانپزشکی • افغانستان</p>
+  </div>
+
+  <div class="row g-4">
+    <!-- تقویم و فیلتر -->
+    <div class="col-lg-8">
+      <div class="glass-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h4>نوبت‌های امروز - ۱۴۰۳/۰۲/۲۸</h4>
+          <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#newAppointmentModal">
+            <i class="bi bi-plus-circle"></i> نوبت جدید
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle" id="appointmentsTable">
+            <thead>
+              <tr>
+                <th>ساعت</th>
+                <th>مریض</th>
+                <th>شماره تماس</th>
+                <th>داکتر</th>
+                <th>نوع نوبت</th>
+                <th>وضعیت</th>
+                <th>عملیات</th>
+              </tr>
+            </thead>
+            <tbody id="appointmentsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- سایدبار نوبت‌ها -->
+    <div class="col-lg-4">
+      <div class="glass-card p-4 mb-4">
+        <h5 class="mb-3">نوبت‌های آینده (این هفته)</h5>
+        <div id="upcomingAppointments"></div>
+      </div>
+
+      <div class="glass-card p-4">
+        <h5 class="mb-3">وضعیت داکتران</h5>
+        <div class="d-flex justify-content-between mb-3">
+          <span>داکتر احمد رحمانی</span>
+          <span class="badge bg-success">آزاد</span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span>داکتر فاطمه کریمی</span>
+          <span class="badge bg-warning">مشغول</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal ثبت نوبت جدید -->
+  <div class="modal fade" id="newAppointmentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content glass-card">
+        <div class="modal-header header-gradient">
+          <h5 class="modal-title fw-bold">ثبت نوبت جدید</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form id="appointmentForm">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-bold">مریض</label>
+                <select class="form-select" id="patient_id" required>
+                  <option value="">انتخاب مریض...</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold">داکتر</label>
+                <select class="form-select" id="doctor_id" required>
+                  <option value="1">داکتر احمد رحمانی</option>
+                  <option value="2">داکتر فاطمه کریمی</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold">تاریخ نوبت</label>
+                <input type="date" class="form-control" id="appointment_date" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold">ساعت</label>
+                <input type="time" class="form-control" id="appointment_time" required>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold">نوع نوبت</label>
+                <select class="form-select" id="appointment_type">
+                  <option value="معاینه">معاینه</option>
+                  <option value="درمان">درمان</option>
+                  <option value="جرم‌گیری">جرم‌گیری</option>
+                  <option value="عصب‌کشی">عصب‌کشی</option>
+                </select>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-bold">توضیحات</label>
+                <textarea class="form-control" id="notes" rows="3"></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+          <button type="button" class="btn btn-success px-5" onclick="saveAppointment()">ثبت نوبت</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// داده نمونه
+let appointments = [
+  {id:1, time:"09:00", patient:"محمد رحیمی", phone:"0785123456", doctor:"داکتر احمد رحمانی", type:"معاینه", status:"تایید شده"},
+  {id:2, time:"10:30", patient:"فاطمه احمدی", phone:"0791234567", doctor:"داکتر فاطمه کریمی", type:"جرم‌گیری", status:"در انتظار"},
+  {id:3, time:"13:00", patient:"احمد خان", phone:"0779988776", doctor:"داکتر احمد رحمانی", type:"عصب‌کشی", status:"تایید شده"},
+];
+
+function renderAppointments() {
+  const tbody = document.getElementById('appointmentsBody');
+  tbody.innerHTML = appointments.map(a => `
+    <tr>
+      <td><strong>${a.time}</strong></td>
+      <td>${a.patient}</td>
+      <td dir="ltr">${a.phone}</td>
+      <td>${a.doctor}</td>
+      <td>${a.type}</td>
+      <td><span class="badge bg-success">${a.status}</span></td>
+      <td>
+        <button class="btn btn-sm btn-outline-primary">ویرایش</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function saveAppointment() {
+  alert("✅ نوبت با موفقیت ثبت شد!");
+  bootstrap.Modal.getInstance(document.getElementById('newAppointmentModal')).hide();
+  renderAppointments();
+}
+
+// شروع صفحه
+renderAppointments();
+</script>
+</body>
+</html>
