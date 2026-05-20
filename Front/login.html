@@ -1,22 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="fa" dir="rtl">
 <head>
-    <title>Login</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ورود به سیستم - کلینیک دندانپزشکی</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: linear-gradient(135deg, #2c3e50 0%, #1e88e5 100%);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 420px;
+    }
+    .logo {
+      font-size: 3.5rem;
+    }
+  </style>
 </head>
 <body>
 
-<div class="login-box">
-    <h2>Clinic Login</h2>
+  <div class="login-card p-5">
+    <div class="text-center mb-4">
+      <h1 class="logo mb-2">🦷</h1>
+      <h3 class="fw-bold">کلینیک دندانپزشکی</h3>
+      <p class="text-muted">سیستم مدیریت دندان پزشکی</p>
+    </div>
 
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
+    <form id="loginForm">
+      <div class="mb-3">
+        <label class="form-label fw-bold">نام کاربری</label>
+        <input type="text" class="form-control form-control-lg" id="username" placeholder="نام کاربری" required>
+      </div>
+      <div class="mb-4">
+        <label class="form-label fw-bold">رمز عبور</label>
+        <input type="password" class="form-control form-control-lg" id="password" placeholder="رمز عبور" required>
+      </div>
 
-    <button onclick="login()">Login</button>
+      <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+        ورود به سیستم
+      </button>
 
-    <p id="msg"></p>
-</div>
+      <div class="text-center">
+        <small class="text-muted">نسخه ۱.۰ - افغانستان</small>
+      </div>
+    </form>
+  </div>
 
-<script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  // برای تست (در نسخه واقعی باید به سرور بفرستد)
+  if (username && password) {
+    alert("✅ ورود با موفقیت انجام شد!\nخوش آمدید " + username);
+    window.location.href = "dashboard.html";   // بعد از ورود به داشبورد برود
+  } else {
+    alert("لطفاً نام کاربری و رمز عبور را وارد کنید");
+  }
+});
+</script>
 </body>
 </html>

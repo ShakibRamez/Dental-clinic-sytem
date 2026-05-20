@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>کاربران - کلینیک دندانپزشکی</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap');
+    body { font-family: 'Vazirmatn', sans-serif; background: linear-gradient(135deg, #f0f4f8, #e6edf7); }
+    .glass-card { background: rgba(255,255,255,0.92); backdrop-filter: blur(16px); border-radius: 20px; box-shadow: 0 10px 35px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body class="p-4">
+
+  <div class="text-center mb-4">
+    <h2 class="fw-bold">👤 مدیریت کاربران سیستم</h2>
+    <small class="text-muted">نسخه ۱.۰ - افغانستان</small>
+  </div>
+
+  <div class="glass-card p-4">
+    <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#newUserModal">+ کاربر جدید</button>
+    
+    <table class="table table-hover" id="usersTable">
+      <thead>
+        <tr>
+          <th>نام کامل</th>
+          <th>نام کاربری</th>
+          <th>نقش</th>
+          <th>وضعیت</th>
+          <th>عملیات</th>
+        </tr>
+      </thead>
+      <tbody id="usersBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Modal کاربر جدید -->
+  <div class="modal fade" id="newUserModal">
+    <div class="modal-dialog">
+      <div class="modal-content glass-card">
+        <div class="modal-header bg-primary text-white">
+          <h5>ثبت کاربر جدید</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="userForm">
+            <div class="mb-3">
+              <label>نام کامل</label>
+              <input type="text" class="form-control" id="full_name" required>
+            </div>
+            <div class="mb-3">
+              <label>نام کاربری</label>
+              <input type="text" class="form-control" id="username" required>
+            </div>
+            <div class="mb-3">
+              <label>رمز عبور</label>
+              <input type="password" class="form-control" id="password" required>
+            </div>
+            <div class="mb-3">
+              <label>نقش کاربر</label>
+              <select class="form-select" id="role">
+                <option value="admin">مدیر سیستم</option>
+                <option value="doctor">داکتر</option>
+                <option value="receptionist">مسئول پذیرش</option>
+                <option value="accountant">حسابدار</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+          <button type="button" class="btn btn-success" onclick="saveUser()">ثبت کاربر</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const users = [
+  {id:1, name:"احمد رحمانی", username:"admin", role:"admin", status:"فعال"},
+  {id:2, name:"فاطمه کریمی", username:"doctor1", role:"doctor", status:"فعال"},
+  {id:3, name:"محمد حسینی", username:"reception", role:"receptionist", status:"فعال"}
+];
+
+function renderUsers() {
+  document.getElementById('usersBody').innerHTML = users.map(u => `
+    <tr>
+      <td>${u.name}</td>
+      <td>${u.username}</td>
+      <td><span class="badge bg-primary">${u.role}</span></td>
+      <td><span class="badge bg-success">${u.status}</span></td>
+      <td><button class="btn btn-sm btn-outline-danger">حذف</button></td>
+    </tr>
+  `).join('');
+}
+
+function saveUser() {
+  alert("✅ کاربر جدید با موفقیت ثبت شد!");
+  bootstrap.Modal.getInstance(document.getElementById('newUserModal')).hide();
+  renderUsers();
+}
+
+renderUsers();
+</script>
+</body>
+</html>
