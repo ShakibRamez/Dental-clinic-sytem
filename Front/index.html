@@ -52,6 +52,14 @@
         <li><a href="users.html" target="contentFrame" class="nav-link">👤 کاربران</a></li>
         <li><a href="settings.html" target="contentFrame" class="nav-link">⚙️ تنظیمات</a></li>
       </ul>
+
+      <div class="mt-auto pt-4 border-top">
+        <small>خوش آمدید، <strong id="currentUser"></strong></small><br><br>
+        <button class="btn btn-outline-light w-100" onclick="logout()">
+          <i class="bi bi-box-arrow-right"></i> خروج از سیستم
+        </button>
+      </div>
+      
     </div>
 
     <!-- محتوای صفحات -->
@@ -61,13 +69,7 @@
   </div>
 </div>
 
+<script src="./assets/js/main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-// چک کردن وضعیت لاگین
-if (localStorage.getItem("isLoggedIn") !== "true") {
-    alert("شما وارد سیستم نشده‌اید! لطفاً ابتدا لاگین کنید.");
-    window.location.href = "login.html";
-}
-</script>
 </body>
 </html>
