@@ -5,3 +5,9 @@ document.querySelectorAll('.nav-link').forEach(link => {
     this.classList.add('active');
   });
 });
+
+//اجازه ورد به صفحات فقط در صورت لاگین بودن
+  if (localStorage.getItem("isLoggedIn") !== "true") {
+      alert("شما وارد سیستم نشده‌اید! لطفاً ابتدا لاگین کنید.");
+      window.location.href = "login.html";
+  }
