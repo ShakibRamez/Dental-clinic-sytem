@@ -6,12 +6,9 @@ document.querySelectorAll('.nav-link').forEach(link => {
   });
 });
 
-// //اجازه ورد به صفحات فقط در صورت لاگین بودن
-//   if (localStorage.getItem("isLoggedIn") !== "true") {
-//       alert("شما وارد سیستم نشده‌اید! لطفاً ابتدا لاگین کنید.");
-//       window.location.href = "login.html";
-//   }
 
+
+// auth.js - سیستم لاگین امن (نسخه نهایی)
 
 const VALID_USERNAME = "admin";
 const VALID_PASSWORD = "1234";
@@ -39,7 +36,7 @@ function checkLogin() {
     return true;
 }
 
-// خروج
+// خروج از سیستم
 function logout() {
     if (confirm("آیا از خروج مطمئن هستید؟")) {
         localStorage.clear();
@@ -47,13 +44,12 @@ function logout() {
     }
 }
 
-// نمایش نام کاربر
+// نمایش نام کاربر لاگین شده
 function getCurrentUser() {
-    return localStorage.getItem("username") || "";
+    return localStorage.getItem("username") || "کاربر";
 }
 
-// اگر صفحه login نبود، چک کن
-if (!window.location.pathname.endsWith("login.html") && 
-    !window.location.pathname.endsWith("index.html")) {
+// اجرا خودکار چک لاگین (به جز صفحه لاگین)
+if (!window.location.pathname.endsWith("login.html")) {
     checkLogin();
 }
