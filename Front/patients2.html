@@ -178,7 +178,7 @@ function renderPatients(data) {
       <td>${p.last_visit}</td>
       <td>
         <button class="btn btn-sm btn-outline-primary me-1" onclick="editPatient(${p.id})">ویرایش</button>
-        <button class="btn btn-sm btn-outline-info" onclick="viewHistory(${p.id})">سابقه</button>
+        <button class="btn btn-sm btn-outline-info" onclick="viewHistory(${p.id})" link>سابقه</button>
       </td>
     </tr>
   `).join('');
