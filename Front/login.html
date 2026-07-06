@@ -79,7 +79,7 @@
     </div>
   </div>
 
-<script src="assets/js/auth.js"></script>
+<script src="/assets/js/auth.js"></script>
 <script>
 document.getElementById('loginForm').addEventListener('submit', function(e) {
   e.preventDefault();
@@ -89,7 +89,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
 
   if (login(username, password)) {
     // alert("✅ ورود با موفقیت انجام شد!\nخوش آمدید");
-    window.location.href = "loading.html";
+    window.location.href = "/loading";
   } else {
     alert("❌ نام کاربری یا رمز عبور اشتباه است!\n\nadmin / 1234");
   }
