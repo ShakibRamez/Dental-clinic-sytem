@@ -77,6 +77,6 @@ app.get('/visits', (req, res) => {
     res.sendFile('./Front/visits.html', {root: __dirname})
 })
 
-// app.use((req, res) => {
-//     res.sendFile('./Front/404.html', {root: __dirname})
-// })
+app.use((req, res) => {
+    res.sendFile('./Front/404.html', {root: __dirname})
+})
