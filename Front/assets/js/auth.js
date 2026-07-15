@@ -15,9 +15,9 @@ const VALID_PASSWORD = "1234";
 // لاگین کردن
 function login(username, password) {
     if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("username", username);
-        localStorage.setItem("loginTime", Date.now());
+        sessionStorage.setItem("isLoggedIn", "true");
+        sessionStorage.setItem("username", username);
+        sessionStorage.setItem("loginTime", Date.now());
         return true;
     }
     return false;
@@ -25,9 +25,9 @@ function login(username, password) {
 
 // چک کردن لاگین
 function checkLogin() {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const isLoggedIn = sessionStorage.getItem("isLoggedIn");
     
-    if (isLoggedIn !== "true") {
+    if (!isLoggedIn) {
         alert("⚠️ شما وارد نشده‌اید!\nلطفاً ابتدا لاگین کنید.");
         window.location.href = "login.html";
         return false;
@@ -38,14 +38,14 @@ function checkLogin() {
 // خروج از سیستم
 function logout() {
     if (confirm("آیا از خروج مطمئن هستید؟")) {
-        localStorage.clear();
+        sessionStorage.clear();
         window.location.href = "login.html";
     }
 }
 
 // نمایش نام کاربر لاگین شده
 function getCurrentUser() {
-    return localStorage.getItem("username") || "کاربر";
+    return sessionStorage.getItem("username") || "کاربر";
 }
 
 // اجرا خودکار چک لاگین (به جز صفحه لاگین)
