@@ -8,8 +8,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
 
 
 
-// auth.js - سیستم لاگین امن (نسخه نهایی)
-
+// auth.js - سیستم لاگین امن 
 const VALID_USERNAME = "admin";
 const VALID_PASSWORD = "1234";
 
