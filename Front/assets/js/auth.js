@@ -1,3 +1,6 @@
+// auth.js - سیستم لاگین امن (نسخه نهایی)
+
+
 // فعال کردن لینک فعال در سایدبار
 document.querySelectorAll('.nav-link').forEach(link => {
   link.addEventListener('click', function() {
@@ -8,27 +11,49 @@ document.querySelectorAll('.nav-link').forEach(link => {
 
 
 
-// auth.js - سیستم لاگین امن (نسخه نهایی)
+// دریافت یوزر و پسورد از فرم لاگین
+async function getUsers() {
+    const response = await fetch('/api/users')
+    const users = await response.json();
+    return users;
+}
 
-const VALID_USERNAME = "admin";
-const VALID_PASSWORD = "1234";
 
 // لاگین کردن
-function login(username, password) {
-    if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-        sessionStorage.setItem("isLoggedIn", "true");
-        sessionStorage.setItem("username", username);
-        sessionStorage.setItem("loginTime", Date.now());
+async function login(username, password) {
+    console.log(result);
+    const response = await fetch("/api/users/login", {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ username, password })
+    });
+    const result = await response.json();
+    if(result.status){
         return true;
     }
     return false;
+
+
 }
 
+
+
+
+
+
+
+
+
+
+
+
 // چک کردن لاگین
-function checkLogin() {
-    const isLoggedIn = sessionStorage.getItem("isLoggedIn");
-    
-    if (!isLoggedIn) {
+async function checkLogin() {
+    const isLoggedIn = await fetch("/api/users/checkLogin");
+    console.log('isLoggedIn');
+    if (!isLoggedIn.status) {
         alert("⚠️ شما وارد نشده‌اید!\nلطفاً ابتدا لاگین کنید.");
         window.location.href = "login.html";
         return false;
@@ -37,19 +62,23 @@ function checkLogin() {
 }
 
 // خروج از سیستم
-function logout() {
+async function logout() {
     if (confirm("آیا از خروج مطمئن هستید؟")) {
-        sessionStorage.clear();
-        window.location.href = "login.html";
+        const response = await fetch("/api/users/logout");
+        if(response.status){
+            window.location.href = "login.html";
+        }
     }
 }
 
 // نمایش نام کاربر لاگین شده
-function getCurrentUser() {
-    return sessionStorage.getItem("username") || "کاربر";
-}
+// function getCurrentUser() {
+//     return sessionStorage.getItem("username") || "کاربر";
+// }
 
 // اجرا خودکار چک لاگین (به جز صفحه لاگین)
 if (!window.location.pathname.endsWith("login.html")) {
+    console.log('run check');
     checkLogin();
 }
+console.log('object1'); 
