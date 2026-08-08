@@ -38,10 +38,12 @@ async function login(username, password) {
             password
         })
     })
-
+    const result = await response.text();
+    console.log(result);
     const isLoggedIn = response.ok;
     if(isLoggedIn){
-        sessionStorage.setItem('isLoggedIn', 'true')
+        sessionStorage.setItem('isLoggedIn', isLoggedIn);
+        sessionStorage.setItem('full_name', JSON.parse(result).user.full_name);
         return isLoggedIn;
     }
     return isLoggedIn;
