@@ -20,7 +20,7 @@
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(255,255,255,0.7);
-      border-radius: 20px;
+      border-radius: 8px;
       box-shadow: 0 10px 35px rgba(0,0,0,0.1);
     }
     .header-gradient {
@@ -157,6 +157,78 @@
     </div>
   </div>
 
+  <!-- Modal ویرایش مریض - مدرن -->
+  <div class="modal fade" id="editPatientModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content glass-card">
+        <div class="modal-header header-gradient">
+           <button type="button" 
+            class="btn-close btn-close-white" 
+            data-bs-dismiss="modal" 
+            aria-label="Close">
+           </button>
+             <h5 class="modal-title fw-bold ms-auto">ثبت مریض جدید</h5>
+        </div>
+        <div class="modal-body p-4">
+          <form id="editPatientForm">
+            <div class="row g-4">
+              <div class="col-md-3">
+                <label class="form-label fw-bold">کد مریض</label>
+                <input type="text" class="form-control" id="edit_patient_code" placeholder="M-24001">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-bold">نام</label>
+                <input type="text" class="form-control" id="edit_first_name" required>
+              </div>
+              <div class="col-md-5">
+                <label class="form-label fw-bold">تخلص</label>
+                <input type="text" class="form-control" id="edit_last_name" required>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label fw-bold">شماره تماس</label>
+                <input type="tel" class="form-control" id="edit_phone" placeholder="07xxxxxxxx" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-bold">تذکره / کد ملی</label>
+                <input type="text" class="form-control" id="edit_national_id">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-bold">تاریخ تولد</label>
+                <input type="date" class="form-control" id="edit_date_of_birth">
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label fw-bold">جنسیت</label>
+                <select class="form-select" id="edit_gender">
+                  <option value="male">مذکر</option>
+                  <option value="female">مونث</option>
+                </select>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-bold">آدرس</label>
+                <input type="text" class="form-control" id="edit_address" placeholder="ولایت، ناحیه، سرک...">
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-bold">آلرژی و سابقه طبی</label>
+                <textarea class="form-control" id="edit_medical_notes" rows="3" placeholder="مثلاً: حساسیت به پنی‌سیلین، فشار خون..."></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+          <button type="button" class="btn btn-success px-5" onclick="updatePatient()">ثبت مریض</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
 <script src="assets/js/auth.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -178,7 +250,7 @@ function renderPatients(data) {
       <td>${p.dob}</td>
       <td>${p.last_visit}</td>
       <td>
-        <button class="btn btn-sm btn-outline-primary me-1" onclick="editPatient(${p.id})">ویرایش</button>
+        <button class="btn btn-sm btn-outline-primary me-1" onclick="editPatient(${p.id}, '${p.code}', '${p.first_name}', '${p.last_name}', '${p.phone}', '${p.gender}', '${p.dob}', '${p.last_visit}')">ویرایش</button>
         <button class="btn btn-sm btn-outline-info" onclick="viewHistory(${p.id})" link>سابقه</button>
       </td>
     </tr>
@@ -204,7 +276,18 @@ function savePatient() {
   renderPatients(patients);
 }
 
-function editPatient(id) { alert(`ویرایش مریض ${id}`); }
+function editPatient(id, code, first_name, last_name, phone, gender, dob, last_visit) { 
+  // alert(`ویرایش مریض ${id}`);
+  document.getElementById('edit_patient_code').value = code;
+  document.getElementById('edit_first_name').value = first_name;
+  document.getElementById('edit_last_name').value = last_name;
+  document.getElementById('edit_phone').value = phone;
+  document.getElementById('edit_gender').value = gender;
+  document.getElementById('edit_date_of_birth').value = dob;
+  document.getElementById('edit_address').value = address;
+  document.getElementById('edit_medical_notes').value = medical_notes;
+  bootstrap.Modal.getInstance(document.getElementById('editPatientModal')).show(); 
+}
 function viewHistory(id) { alert(`سابقه طبی مریض ${id}`); }
 
 // شروع

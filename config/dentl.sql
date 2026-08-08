@@ -7,6 +7,11 @@
 -- 1. Main Tables
 -- =============================================
 
+INSERT INTO users(username, password_hash, full_name, role, phone)
+VALUES('ahmad', 'asd', 'ahmad ahmadi', 'admin', '0791929394'),
+('ali', 'dsa', 'ali ahmadi', 'doctor', '0794939291');
+
+
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,

@@ -26,8 +26,10 @@
     <table class="table table-hover" id="usersTable">
       <thead>
         <tr>
+          <th>آیدی</th>
           <th>نام کامل</th>
           <th>نام کاربری</th>
+          <th>شماره تلفن</th>
           <th>نقش</th>
           <th>وضعیت</th>
           <th>عملیات</th>
@@ -91,12 +93,35 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 
+
+//  DELETING USER
+const userBody = document.getElementById('usersBody').addEventListener("click", (e)=> {
+  if(e.target.className.indexOf('btn') != -1){
+    if(!confirm("آیا مطمئن هستید؟")){
+      return;
+    }
+    let id = e.target.parentElement.parentElement.firstElementChild.textContent;
+    deleteUser(id);
+  }
+  renderUsers();
+  e.preventDefault();
+})
+
+async function deleteUser(id) {
+  const response = await fetch(`/api/users/${id}`, {
+    method: "DELETE"
+  })
+}
+
+
 async function renderUsers() {
   let users = await loadUsers();
   document.getElementById('usersBody').innerHTML = users.map(u => `
     <tr>
+      <td>${u.id}</td>
       <td>${u.full_name}</td>
       <td>${u.username}</td>
+      <td>${u.phone}</td>
       <td><span class="badge bg-primary">${u.role}</span></td>
       <td><span class="badge bg-success">${u.is_active? "فعال": "غیرفعال"}</span></td>
       <td><button class="btn btn-sm btn-outline-danger">حذف</button></td>
@@ -104,8 +129,28 @@ async function renderUsers() {
   `).join('');
 }
 
-function saveUser() {
+async function saveUser() {
+  const full_name = (document.getElementById('full_name')).value;
+  const username = (document.getElementById('username')).value;
+  const password_hash = (document.getElementById('password')).value;
+  const phone = (document.getElementById('phone')).value;
+  const role = (document.getElementById('role')).value;
+  
+  const response = await fetch('/api/users', {
+    method: 'POST',
+    headers: {"Content-Type": "application/json"},
+    credentials:"same-origin",
+    body: JSON.stringify({
+      username ,
+      password_hash ,
+      full_name ,
+      role ,
+      phone
+    })
+  })
+  
   alert("✅ کاربر جدید با موفقیت ثبت شد!");
+  
   bootstrap.Modal.getInstance(document.getElementById('newUserModal')).hide();
   renderUsers();
 }
@@ -130,3 +175,27 @@ renderUsers();
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- const response = await fetch("/api/users", {
+    method: "POST",
+    header:{ "Content-Type": "application/json"},
+    credentials: "same-origin",
+    body{
+      username:,
+      password:,
+      full_name:,
+      role:,
+      phone:
+    }
+  }) -->

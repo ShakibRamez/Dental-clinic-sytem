@@ -39,31 +39,31 @@ app.get('/', (req, res) => {
     res.sendFile('./Front/login.html', {root: __dirname})
 })
 
-app.get('/appointments', checkAuth, (req, res) => {
+app.get('/appointments', (req, res) => {
     res.sendFile('./Front/appointments.html', {root: __dirname})
 })
 
-app.get('/backups', checkAuth, (req, res) => {
+app.get('/backups', (req, res) => {
     res.sendFile('./Front/backups.html', {root: __dirname})
 })
 
-app.get('/dashboard', checkAuth, (req, res) => {
+app.get('/dashboard', (req, res) => {
     res.sendFile('./Front/dashboard.html', {root: __dirname})
 })
 
-app.get('/doctors2', checkAuth, (req, res) => {
+app.get('/doctors2', (req, res) => {
     res.sendFile('./Front/doctors2.html', {root: __dirname})
 })
 
-app.get('/index', checkAuth, (req, res) => {
+app.get('/index', (req, res) => {
     res.sendFile('./Front/index.html', {root: __dirname})
 })
 
-app.get('/inventory', checkAuth, (req, res) => {
+app.get('/inventory', (req, res) => {
     res.sendFile('./Front/inventory.html', {root: __dirname})
 })
 
-app.get('/invoices', checkAuth, (req, res) => {
+app.get('/invoices', (req, res) => {
     res.sendFile('./Front/invoices.html', {root: __dirname})
 })
 
@@ -71,35 +71,35 @@ app.get('/loading', (req, res) => {
     res.sendFile('./Front/loading.html', {root: __dirname})
 })
 
-app.get('/patient-history', checkAuth, (req, res) => {
+app.get('/patient-history', (req, res) => {
     res.sendFile('./Front/patient-history.html', {root: __dirname})
 })
 
-app.get('/patients2', checkAuth, (req, res) => {
+app.get('/patients2', (req, res) => {
     res.sendFile('./Front/patients2.html', {root: __dirname})
 })
 
-app.get('/prescriptions', checkAuth, (req, res) => {
+app.get('/prescriptions', (req, res) => {
     res.sendFile('./Front/prescriptions.html', {root: __dirname})
 })
 
-app.get('/reports', checkAuth, (req, res) => {
+app.get('/reports', (req, res) => {
     res.sendFile('./Front/reports.html', {root: __dirname})
 })
 
-app.get('/settings', checkAuth, (req, res) => {
+app.get('/settings', (req, res) => {
     res.sendFile('./Front/settings.html', {root: __dirname})
 })
 
-app.get('/treatment-plans', checkAuth, (req, res) => {
+app.get('/treatment-plans', (req, res) => {
     res.sendFile('./Front/treatment-plans.html', {root: __dirname})
 })
 
-app.get('/users', checkAuth, async (req, res) => {
+app.get('/users', async (req, res) => {
     res.sendFile('./Front/users.html', {root: __dirname})
 })
 
-app.get('/visits', checkAuth, (req, res) => {
+app.get('/visits', (req, res) => {
     res.sendFile('./Front/visits.html', {root: __dirname})
 })
 

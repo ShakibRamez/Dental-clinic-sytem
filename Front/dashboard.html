@@ -16,6 +16,8 @@
     .header { background: linear-gradient(135deg, #2c3e50, #3498db); color: white; border-radius: 20px; }
     .quick-action { transition: all 0.3s; }
     .quick-action:hover { transform: translateY(-5px) scale(1.05); }
+    .glass-card { transition: all 0.3s; }
+    .glass-card:hover { transform: translateY(-10px); }
   </style>
 </head>
 <body class="p-4">
@@ -204,7 +206,6 @@
 <script src="assets/js/auth.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  console.log('object');
 // تاریخ امروز
 document.getElementById('currentDate').textContent = new Intl.DateTimeFormat('fa-IR', {
   weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
