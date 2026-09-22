@@ -120,7 +120,7 @@ async function renderUsers() {
     <tr>
       <td>${u.id}</td>
       <td>${u.full_name}</td>
-      <td>${u.username}</td>
+      <td class="savedUsername">${u.username}</td>
       <td>${u.phone}</td>
       <td><span class="badge bg-primary">${u.role}</span></td>
       <td><span class="badge bg-success">${u.is_active? "فعال": "غیرفعال"}</span></td>
@@ -135,6 +135,19 @@ async function saveUser() {
   const password_hash = (document.getElementById('password')).value;
   const phone = (document.getElementById('phone')).value;
   const role = (document.getElementById('role')).value;
+  const userNames = document.querySelectorAll('.savedUsername');
+  let b = true;
+  userNames.forEach(u => {
+    if(u.textContent === username){
+      alert("❌ نام کاربری تکراری است!");
+      b = false;
+    }
+  })
+  if(!RegExp("^[a-zA-Z_\s]$").test(full_name)){
+    alert("❌ نام کامل باید با حروف باشد!");
+    b = false;
+  }
+  if(!b) return;
   
   const response = await fetch('/api/users', {
     method: 'POST',

@@ -23,11 +23,27 @@
 
     <h1 class="load">Loading System....</h1>
     
-
-    <script>
-        setTimeout(() => document.querySelector('.load').classList.add('show'), 100);
-        setTimeout(() => window.location.href = "/index", 1000);
-    </script>
     <script src="./assets/js/auth.js"></script>
+    <script>
+        const userName = sessionStorage.getItem("user_name");
+
+        async function getRole(userName) {
+            const users = await getUsers()
+            const role = users.find(u => {
+                return u.username === userName;
+            })                        
+            return role
+        }
+
+        setTimeout(() => document.querySelector('.load').classList.add('show'), 100);
+
+        async function name() {
+            if(((await getRole(userName)).role).toLowerCase() === "amin") 
+                setTimeout(() => window.location.href = "/index", 1000);
+            else if(((await getRole(userName)).role).toLowerCase() === "admin") 
+                setTimeout(() => window.location.href = "/prescriptions", 1000);
+        }
+        name()
+    </script>
 </body>
 </html>

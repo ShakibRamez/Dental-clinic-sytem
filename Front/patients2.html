@@ -167,7 +167,7 @@
             data-bs-dismiss="modal" 
             aria-label="Close">
            </button>
-             <h5 class="modal-title fw-bold ms-auto">ثبت مریض جدید</h5>
+             <h5 class="modal-title fw-bold ms-auto">ویرایش مریض</h5>
         </div>
         <div class="modal-body p-4">
           <form id="editPatientForm">
@@ -252,6 +252,7 @@ function renderPatients(data) {
       <td>
         <button class="btn btn-sm btn-outline-primary me-1" onclick="editPatient(${p.id}, '${p.code}', '${p.first_name}', '${p.last_name}', '${p.phone}', '${p.gender}', '${p.dob}', '${p.last_visit}')">ویرایش</button>
         <button class="btn btn-sm btn-outline-info" onclick="viewHistory(${p.id})" link>سابقه</button>
+        <button class="btn btn-sm btn-outline-danger" onclick="deletePatient(${p.id})">حذف</button>     
       </td>
     </tr>
   `).join('');
@@ -289,6 +290,7 @@ function editPatient(id, code, first_name, last_name, phone, gender, dob, last_v
   bootstrap.Modal.getInstance(document.getElementById('editPatientModal')).show(); 
 }
 function viewHistory(id) { alert(`سابقه طبی مریض ${id}`); }
+function deletePatient(id) { alert(`حذف مریض ${id}`); }
 
 // شروع
 renderPatients(patients);

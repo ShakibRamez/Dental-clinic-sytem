@@ -41,6 +41,16 @@ CREATE TABLE patients (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE doctors (
+    id SERIAL PRIMARY KEY,
+    specializtion VARCHAR(50) NOT NULL,
+    email VARCHAR(150),
+    start_time TIME,
+    end_time TIME,
+    note TEXT,
+    employment_id INT REFERENCES users(id)
+);
+
 CREATE TABLE treatments (
     id SERIAL PRIMARY KEY,
     code VARCHAR(20) UNIQUE,

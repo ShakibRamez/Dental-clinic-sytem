@@ -21,9 +21,6 @@ async function getUsers() {
     return users;
 }
 
-
-login('ahmad', 'asd')
-
 // لاگین کردن
 async function login(username, password) {
 
@@ -38,12 +35,14 @@ async function login(username, password) {
             password
         })
     })
+
     const result = await response.text();
-    console.log(result);
+
     const isLoggedIn = response.ok;
     if(isLoggedIn){
         sessionStorage.setItem('isLoggedIn', isLoggedIn);
         sessionStorage.setItem('full_name', JSON.parse(result).user.full_name);
+        sessionStorage.setItem('user_name', JSON.parse(result).user.username);
         return isLoggedIn;
     }
     return isLoggedIn;
@@ -65,7 +64,7 @@ async function checkLogin() {
 
 // اجرا خودکار چک لاگین (به جز صفحه لاگین)
 if(!window.location.pathname.endsWith("login.html")) {
-    checkLogin();
+        checkLogin();
 }
 
 
@@ -95,15 +94,6 @@ function getCurrentUser() {
 
 
 
-// async function login(username, password) {
-//     const users = await getUsers();
-//     const user = users.find(u => u.username === username && u.password_hash === password);
-//     users.forEach(u => {
-//         if(u.username === username && u.password_hash === password){
-//             console.log(u)
-//             sessionStorage.setItem('isLoggedIn', 'true')
-//             return true;
-//         }
-//     });
-//     return false;
-// }
+
+
+

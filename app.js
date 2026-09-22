@@ -14,28 +14,15 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
-app.use(session({
-    secret: 'mySecretKey',
-    resave: false,
-    saveUninitialized: false,
-    cookie: { 
-        maxAge: 1000 * 60 * 60, // 1 hour
-    }
-}));
-
-
-
-
-// Static files
-app.use(express.static('Front'))
-
-
-
-
 
 
 // Page Routes
-app.get('/', (req, res) => {
+
+app.get("/", (req, res) => {
+    res.redirect("/login.html")
+})
+
+app.get('/login', (req, res) => {
     res.sendFile('./Front/login.html', {root: __dirname})
 })
 
@@ -103,6 +90,8 @@ app.get('/visits', (req, res) => {
     res.sendFile('./Front/visits.html', {root: __dirname})
 })
 
+// Static files
+app.use(express.static("Front"));
 
 
 // API Routes
