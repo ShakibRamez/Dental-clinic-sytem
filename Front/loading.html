@@ -38,7 +38,7 @@
         setTimeout(() => document.querySelector('.load').classList.add('show'), 100);
 
         async function name() {
-            if(((await getRole(userName)).role).toLowerCase() === "amin") 
+            if(((await getRole(userName)).role).toLowerCase() === "admin") 
                 setTimeout(() => window.location.href = "/index", 1000);
             else if(((await getRole(userName)).role).toLowerCase() === "admin") 
                 setTimeout(() => window.location.href = "/prescriptions", 1000);
