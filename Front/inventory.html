@@ -13,12 +13,12 @@
     body {
       font-family: 'Vazirmatn', sans-serif;
       background: linear-gradient(135deg, #f0f4f8 0%, #e6edf7 100%);
+      min-height: 100vh;
     }
     .glass-card {
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.7);
-      border-radius: 8px;
+      border-radius: 20px;
       box-shadow: 0 10px 35px rgba(0,0,0,0.1);
     }
     .header-gradient {
@@ -26,56 +26,64 @@
       color: white;
     }
     .low-stock {
-      background: #ffebee;
-      color: #d32f2f;
+      background-color: #ffebee !important;
+    }
+    .stat-card {
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
     }
   </style>
 </head>
 <body class="p-4">
 
   <div class="header-gradient p-4 rounded-4 mb-4 text-center">
-    <h2 class="fw-bold mb-1">📦 مدیریت انبار</h2>
+    <h2 class="mb-1 fw-bold">📦 مدیریت انبار</h2>
     <p class="mb-0">کلینیک دندانپزشکی • افغانستان</p>
   </div>
 
+  <!-- آمار سریع -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="glass-card stat-card">
+        <h6 class="text-muted">کل اقلام</h6>
+        <h3 id="totalItems">۰</h3>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="glass-card stat-card">
+        <h6 class="text-muted">موجودی کم</h6>
+        <h3 class="text-danger" id="lowStockCount">۰</h3>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="glass-card stat-card">
+        <h6 class="text-muted">ارزش کل انبار</h6>
+        <h3 class="text-success" id="totalValue">۰ ؋</h3>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="glass-card stat-card">
+        <h6 class="text-muted">موارد رو به اتمام</h6>
+        <h3 class="text-warning" id="criticalCount">۰</h3>
+      </div>
+    </div>
+  </div>
+
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4>موجودی مواد و تجهیزات</h4>
-    <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#newItemModal">
+    <div>
+      <input type="text" id="searchInput" class="form-control" style="width:300px; display:inline-block;" 
+             placeholder="جستجوی نام یا کد جنس..." onkeyup="filterItems()">
+    </div>
+    <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#itemModal" onclick="openNewItem()">
       <i class="bi bi-plus-circle"></i> اضافه کردن جنس جدید
     </button>
   </div>
 
-  <!-- آمار سریع انبار -->
-  <div class="row g-4 mb-4">
-    <div class="col-md-3">
-      <div class="glass-card p-3 text-center">
-        <h6 class="text-muted">کل اقلام</h6>
-        <h3 class="text-primary">۴۲</h3>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="glass-card p-3 text-center low-stock">
-        <h6>موجودی کم</h6>
-        <h3 class="text-danger">۷</h3>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="glass-card p-3 text-center">
-        <h6>ارزش کل انبار</h6>
-        <h3 class="text-success">۱,۲۶۰,۰۰۰ ؋</h3>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="glass-card p-3 text-center">
-        <h6>موارد رو به اتمام</h6>
-        <h3 class="text-warning">۵</h3>
-      </div>
-    </div>
-  </div>
-
+  <!-- جدول انبار -->
   <div class="glass-card p-4">
     <div class="table-responsive">
-      <table class="table table-hover align-middle" id="inventoryTable">
+      <table class="table table-hover align-middle">
         <thead>
           <tr>
             <th>کد جنس</th>
@@ -93,20 +101,17 @@
     </div>
   </div>
 
-  <!-- Modal اضافه کردن جنس جدید -->
-  <div class="modal fade" id="newItemModal" tabindex="-1">
+  <!-- Modal ثبت / ویرایش جنس -->
+  <div class="modal fade" id="itemModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content glass-card">
-         <div class="modal-header header-gradient">
-          <button type="button" 
-            class="btn-close btn-close-white" 
-            data-bs-dismiss="modal" 
-            aria-label="Close">
-           </button>
-            <h5 class="modal-title fw-bold ms-auto">ثبت جنس جدید</h5>
+        <div class="modal-header header-gradient">
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          <h5 class="modal-title fw-bold ms-auto" id="modalTitle">اضافه کردن جنس جدید</h5>
         </div>
         <div class="modal-body p-4">
-          <form id="inventoryForm">
+          <form id="itemForm">
+            <input type="hidden" id="edit_id">
             <div class="row g-3">
               <div class="col-md-4">
                 <label class="form-label fw-bold">کد جنس</label>
@@ -148,26 +153,28 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
-          <button type="button" class="btn btn-success px-5" onclick="saveItem()">ثبت در انبار</button>
+          <button type="button" class="btn btn-success px-5" onclick="saveItem()">ذخیره</button>
         </div>
       </div>
     </div>
   </div>
 
-<script src="assets/js/auth.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// داده نمونه انبار
+// داده نمونه
 let inventory = [
   {id:1, code:"MAT-001", name:"کامپوزیت A2", category:"مواد ترمیمی", stock:12, minStock:15, price:4500, location:"قفسه A-1"},
   {id:2, code:"MAT-002", name:"لیدوکائین", category:"دارویی", stock:45, minStock:20, price:1200, location:"یخچال"},
   {id:3, code:"INS-005", name:"توربین دندانپزشکی", category:"ابزار", stock:3, minStock:5, price:18500, location:"قفسه B-2"},
   {id:4, code:"MAT-003", name:"ساکشن", category:"مصرفی", stock:68, minStock:30, price:800, location:"قفسه C"},
+  {id:5, code:"MAT-004", name:"آموکسی‌سیلین ۵۰۰", category:"دارویی", stock:8, minStock:15, price:350, location:"قفسه دارو"},
 ];
 
-function renderInventory() {
+let editMode = false;
+
+function renderInventory(data = inventory) {
   const tbody = document.getElementById('inventoryBody');
-  tbody.innerHTML = inventory.map(item => `
+  tbody.innerHTML = data.map(item => `
     <tr class="${item.stock < item.minStock ? 'low-stock' : ''}">
       <td><strong>${item.code}</strong></td>
       <td>${item.name}</td>
@@ -181,23 +188,100 @@ function renderInventory() {
           : '<span class="badge bg-success">کافی</span>'}
       </td>
       <td>
-        <button class="btn btn-sm btn-outline-primary" onclick="editItem(${item.id})">ویرایش</button>
+        <button class="btn btn-sm btn-outline-primary me-1" onclick="editItem(${item.id})">ویرایش</button>
+        <button class="btn btn-sm btn-outline-danger" onclick="deleteItem(${item.id})">حذف</button>
       </td>
     </tr>
   `).join('');
+
+  updateStats();
 }
 
-function saveItem() {
-  alert("✅ جنس جدید با موفقیت به انبار اضافه شد!");
-  bootstrap.Modal.getInstance(document.getElementById('newItemModal')).hide();
-  renderInventory();
+function updateStats() {
+  document.getElementById('totalItems').textContent = inventory.length;
+  
+  const lowStock = inventory.filter(i => i.stock < i.minStock);
+  document.getElementById('lowStockCount').textContent = lowStock.length;
+  
+  const critical = inventory.filter(i => i.stock <= i.minStock / 2);
+  document.getElementById('criticalCount').textContent = critical.length;
+  
+  const totalValue = inventory.reduce((sum, i) => sum + (i.stock * i.price), 0);
+  document.getElementById('totalValue').textContent = totalValue.toLocaleString('fa-IR') + ' ؋';
+}
+
+function filterItems() {
+  const search = document.getElementById('searchInput').value.toLowerCase().trim();
+  const filtered = inventory.filter(item => 
+    item.name.toLowerCase().includes(search) || 
+    item.code.toLowerCase().includes(search)
+  );
+  renderInventory(filtered);
+}
+
+function openNewItem() {
+  editMode = false;
+  document.getElementById('modalTitle').textContent = 'اضافه کردن جنس جدید';
+  document.getElementById('itemForm').reset();
+  document.getElementById('edit_id').value = '';
+  document.getElementById('min_stock').value = 10;
 }
 
 function editItem(id) {
-  alert(`ویرایش جنس شماره ${id}`);
+  const item = inventory.find(i => i.id === id);
+  if (!item) return;
+
+  editMode = true;
+  document.getElementById('modalTitle').textContent = 'ویرایش جنس';
+  document.getElementById('edit_id').value = item.id;
+  document.getElementById('item_code').value = item.code;
+  document.getElementById('item_name').value = item.name;
+  document.getElementById('category').value = item.category;
+  document.getElementById('current_stock').value = item.stock;
+  document.getElementById('min_stock').value = item.minStock;
+  document.getElementById('purchase_price').value = item.price;
+  document.getElementById('location').value = item.location || '';
+
+  new bootstrap.Modal(document.getElementById('itemModal')).show();
 }
 
-// شروع صفحه
+function saveItem() {
+  const id = document.getElementById('edit_id').value;
+  const data = {
+    code: document.getElementById('item_code').value,
+    name: document.getElementById('item_name').value,
+    category: document.getElementById('category').value,
+    stock: Number(document.getElementById('current_stock').value),
+    minStock: Number(document.getElementById('min_stock').value),
+    price: Number(document.getElementById('purchase_price').value) || 0,
+    location: document.getElementById('location').value
+  };
+
+  if (editMode && id) {
+    const index = inventory.findIndex(i => i.id == id);
+    if (index !== -1) {
+      inventory[index] = { ...inventory[index], ...data };
+      alert("✅ جنس با موفقیت ویرایش شد!");
+    }
+  } else {
+    const newId = inventory.length > 0 ? Math.max(...inventory.map(i => i.id)) + 1 : 1;
+    inventory.push({ id: newId, ...data });
+    alert("✅ جنس جدید با موفقیت اضافه شد!");
+  }
+
+  bootstrap.Modal.getInstance(document.getElementById('itemModal')).hide();
+  renderInventory();
+}
+
+function deleteItem(id) {
+  if (confirm("آیا مطمئن هستید که می‌خواهید این جنس را حذف کنید؟")) {
+    inventory = inventory.filter(i => i.id !== id);
+    renderInventory();
+    alert("✅ جنس با موفقیت حذف شد!");
+  }
+}
+
+// شروع
 renderInventory();
 </script>
 </body>
