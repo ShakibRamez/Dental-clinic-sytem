@@ -13,16 +13,21 @@
     body {
       font-family: 'Vazirmatn', sans-serif;
       background: linear-gradient(135deg, #f0f4f8 0%, #e6edf7 100%);
+      min-height: 100vh;
     }
     .glass-card {
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(255,255,255,0.7);
-      border-radius: 8px;
+      border-radius: 20px;
       box-shadow: 0 10px 35px rgba(0,0,0,0.1);
     }
     .header-gradient {
       background: linear-gradient(135deg, #2c3e50, #1e88e5);
+      color: white;
+    }
+    .table th {
+      background: #2c3e50;
       color: white;
     }
   </style>
@@ -30,20 +35,21 @@
 <body class="p-4">
 
   <div class="header-gradient p-4 rounded-4 mb-4 text-center">
-    <h2 class="fw-bold mb-1">📝 ویزیت‌ها و معاینات</h2>
+    <h2 class="mb-1 fw-bold">📝 ویزیت‌ها و معاینات</h2>
     <p class="mb-0">کلینیک دندانپزشکی • افغانستان</p>
   </div>
 
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4>ویزیت‌های اخیر</h4>
-    <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#newVisitModal">
+    <h4>لیست ویزیت‌ها</h4>
+    <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#visitModal" onclick="openNewVisit()">
       <i class="bi bi-plus-circle"></i> ثبت ویزیت جدید
     </button>
   </div>
 
+  <!-- جدول ویزیت‌ها -->
   <div class="glass-card p-4">
     <div class="table-responsive">
-      <table class="table table-hover align-middle" id="visitsTable">
+      <table class="table table-hover align-middle">
         <thead>
           <tr>
             <th>تاریخ</th>
@@ -61,20 +67,17 @@
     </div>
   </div>
 
-  <!-- Modal ثبت ویزیت جدید -->
-  <div class="modal fade" id="newVisitModal" tabindex="-1">
+  <!-- Modal ثبت / ویرایش ویزیت -->
+  <div class="modal fade" id="visitModal" tabindex="-1">
     <div class="modal-dialog modal-xl">
       <div class="modal-content glass-card">
-         <div class="modal-header header-gradient">
-          <button type="button" 
-            class="btn-close btn-close-white" 
-            data-bs-dismiss="modal" 
-            aria-label="Close">
-           </button>
-            <h5 class="modal-title fw-bold ms-auto">ثبت ویزیت جدید</h5>
+        <div class="modal-header header-gradient">
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          <h5 class="modal-title fw-bold ms-auto" id="modalTitle">ثبت ویزیت جدید</h5>
         </div>
         <div class="modal-body p-4">
           <form id="visitForm">
+            <input type="hidden" id="edit_id">
             <div class="row g-3">
               <div class="col-md-5">
                 <label class="form-label fw-bold">مریض</label>
@@ -82,6 +85,7 @@
                   <option value="">انتخاب مریض...</option>
                   <option value="1">محمد رحیمی - M-24001</option>
                   <option value="2">فاطمه احمدی - M-24002</option>
+                  <option value="3">احمد خان - M-24003</option>
                 </select>
               </div>
               <div class="col-md-4">
@@ -89,6 +93,7 @@
                 <select class="form-select" id="doctor_id" required>
                   <option value="1">داکتر احمد رحمانی</option>
                   <option value="2">داکتر فاطمه کریمی</option>
+                  <option value="3">داکتر محمد نوری</option>
                 </select>
               </div>
               <div class="col-md-3">
@@ -115,21 +120,29 @@
                 <label class="form-label fw-bold">نکات و دستورات</label>
                 <textarea class="form-control" id="notes" rows="3"></textarea>
               </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold">وضعیت</label>
+                <select class="form-select" id="status">
+                  <option value="completed">تکمیل شده</option>
+                  <option value="in_progress">در حال انجام</option>
+                  <option value="pending">در انتظار</option>
+                </select>
+              </div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
-          <button type="button" class="btn btn-success px-5" onclick="saveVisit()">ثبت ویزیت</button>
+          <button type="button" class="btn btn-success px-5" onclick="saveVisit()">ذخیره ویزیت</button>
         </div>
       </div>
     </div>
   </div>
 
-<script src="assets/js/auth.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// داده نمونه ویزیت‌ها
+// داده نمونه
 let visits = [
   {
     id: 1,
@@ -163,6 +176,8 @@ let visits = [
   }
 ];
 
+let editMode = false;
+
 function renderVisits() {
   const tbody = document.getElementById('visitsBody');
   tbody.innerHTML = visits.map(v => `
@@ -174,28 +189,51 @@ function renderVisits() {
       <td>${v.reason}</td>
       <td>${v.diagnosis}</td>
       <td>
-        <span class="badge ${v.status === 'completed' ? 'bg-success' : 'bg-warning'}">
-          ${v.status === 'completed' ? 'تکمیل شده' : 'در حال انجام'}
+        <span class="badge ${v.status === 'completed' ? 'bg-success' : v.status === 'in_progress' ? 'bg-warning' : 'bg-secondary'}">
+          ${v.status === 'completed' ? 'تکمیل شده' : v.status === 'in_progress' ? 'در حال انجام' : 'در انتظار'}
         </span>
       </td>
       <td>
-        <button class="btn btn-sm btn-outline-primary" onclick="viewVisit(${v.id})">جزئیات</button>
+        <button class="btn btn-sm btn-outline-primary me-1" onclick="editVisit(${v.id})">ویرایش</button>
+        <button class="btn btn-sm btn-outline-danger" onclick="deleteVisit(${v.id})">حذف</button>
       </td>
     </tr>
   `).join('');
 }
 
+function openNewVisit() {
+  editMode = false;
+  document.getElementById('modalTitle').textContent = 'ثبت ویزیت جدید';
+  document.getElementById('visitForm').reset();
+  document.getElementById('edit_id').value = '';
+}
+
+function editVisit(id) {
+  const visit = visits.find(v => v.id === id);
+  if (!visit) return;
+
+  editMode = true;
+  document.getElementById('modalTitle').textContent = 'ویرایش ویزیت';
+  document.getElementById('edit_id').value = visit.id;
+  
+  new bootstrap.Modal(document.getElementById('visitModal')).show();
+}
+
 function saveVisit() {
-  alert("✅ ویزیت با موفقیت ثبت شد!");
-  bootstrap.Modal.getInstance(document.getElementById('newVisitModal')).hide();
+  alert(editMode ? "✅ ویزیت با موفقیت ویرایش شد!" : "✅ ویزیت جدید با موفقیت ثبت شد!");
+  bootstrap.Modal.getInstance(document.getElementById('visitModal')).hide();
   renderVisits();
 }
 
-function viewVisit(id) {
-  alert(`مشاهده جزئیات ویزیت شماره ${id}`);
+function deleteVisit(id) {
+  if (confirm("آیا مطمئن هستید که می‌خواهید این ویزیت را حذف کنید؟")) {
+    visits = visits.filter(v => v.id !== id);
+    renderVisits();
+    alert("✅ ویزیت با موفقیت حذف شد!");
+  }
 }
 
-// شروع صفحه
+// شروع
 renderVisits();
 </script>
 </body>

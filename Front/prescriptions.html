@@ -7,17 +7,17 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/style.css">
-  <style>
+ <style>
     @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap');
     
     body {
       font-family: 'Vazirmatn', sans-serif;
       background: linear-gradient(135deg, #f0f4f8 0%, #e6edf7 100%);
+      min-height: 100vh;
     }
     .glass-card {
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.7);
       border-radius: 20px;
       box-shadow: 0 10px 35px rgba(0,0,0,0.1);
     }
@@ -25,128 +25,248 @@
       background: linear-gradient(135deg, #2c3e50, #1e88e5);
       color: white;
     }
-    .prescription-box {
-      border: 2px dashed #0d6efd;
-      border-radius: 15px;
-      padding: 20px;
-      background: #f8f9ff;
+    .drug-item {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .search-result {
+      cursor: pointer;
+      padding: 8px 12px;
+      border-bottom: 1px solid #eee;
+    }
+    .search-result:hover {
+      background: #e3f2fd;
     }
   </style>
 </head>
 <body class="p-4">
 
   <div class="header-gradient p-4 rounded-4 mb-4 text-center">
-    <h2 class="fw-bold mb-1">📝 نسخه‌نویسی داکتر</h2>
+    <h2 class="mb-1 fw-bold">📝 نسخه‌نویسی حرفه‌ای</h2>
     <p class="mb-0">کلینیک دندانپزشکی • افغانستان</p>
   </div>
 
   <div class="row g-4">
-    <div class="col-lg-8">
+    <!-- فرم نسخه -->
+    <div class="col-lg-7">
       <div class="glass-card p-4">
-        <h5 class="mb-3">اطلاعات نسخه</h5>
-        
+        <h5 class="mb-4">اطلاعات نسخه</h5>
+
         <div class="row g-3 mb-4">
           <div class="col-md-6">
-            <label class="form-label fw-bold">نام مریض</label>
-            <select class="form-select" id="patientSelect">
+            <label class="form-label fw-bold">مریض</label>
+            <select class="form-select" id="patient_id">
               <option value="">انتخاب مریض...</option>
               <option value="1">محمد رحیمی - M-24001</option>
               <option value="2">فاطمه احمدی - M-24002</option>
+              <option value="3">احمد خان - M-24003</option>
             </select>
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold">داکتر</label>
-            <input type="text" class="form-control" readonly>
+            <input type="text" class="form-control" value="داکتر احمد رحمانی" readonly>
           </div>
         </div>
 
-        <div class="prescription-box mb-4">
-          <h6 class="mb-3 text-primary">داروها و دستورات</h6>
-          
-          <div id="drugsList"></div>
-          
-          <button class="btn btn-outline-primary mt-3" onclick="addDrugRow()">
-            <i class="bi bi-plus"></i> اضافه کردن دارو
-          </button>
+        <!-- جستجوی دارو از انبار -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">جستجوی دارو از انبار</label>
+          <input type="text" class="form-control form-control-lg" id="drugSearch" 
+                 placeholder="نام دارو را تایپ کنید..." onkeyup="searchDrugs()">
+          <div id="searchResults" class="border rounded mt-1 bg-white" style="display:none; max-height:200px; overflow-y:auto;"></div>
+        </div>
+
+        <!-- لیست داروهای اضافه شده -->
+        <div class="mb-3">
+          <h6>داروهای نسخه:</h6>
+          <div id="selectedDrugs"></div>
         </div>
 
         <div class="mb-3">
-          <label class="form-label fw-bold">دستورات و توصیه‌ها</label>
-          <textarea class="form-control" id="instructions" rows="4" placeholder="مثلاً: بعد از غذا مصرف شود، ۷ روز ادامه یابد..."></textarea>
+          <label class="form-label fw-bold">دستورات کلی</label>
+          <textarea class="form-control" id="instructions" rows="3" 
+                    placeholder="مثلاً: بعد از غذا مصرف شود، ۷ روز ادامه یابد..."></textarea>
         </div>
-      </div>
-    </div>
 
-    <!-- پیش‌نمایش نسخه -->
-    <div class="col-lg-4">
-      <div class="glass-card p-4 sticky-top" style="top:20px">
-        <h5 class="mb-3">پیش‌نمایش نسخه</h5>
-        <div class="border p-3 bg-white rounded-3" id="previewArea" style="min-height:400px; font-size:0.95rem;">
-          <p class="text-center text-muted">پس از افزودن دارو، پیش‌نمایش اینجا نمایش داده می‌شود</p>
-        </div>
-        
-        <div class="mt-4 d-grid gap-2">
-          <button class="btn btn-success" onclick="savePrescription()">
-            <i class="bi bi-save"></i> ذخیره و چاپ نسخه
+        <div class="d-flex gap-2">
+          <button class="btn btn-success px-4" onclick="savePrescription()">
+            <i class="bi bi-save"></i> ذخیره نسخه
           </button>
-          <button class="btn btn-outline-secondary" onclick="printPrescription()">
+          <button class="btn btn-outline-primary" onclick="printPrescription()">
             <i class="bi bi-printer"></i> چاپ نسخه
           </button>
         </div>
       </div>
     </div>
+
+    <!-- پیش‌نمایش نسخه -->
+    <div class="col-lg-5">
+      <div class="glass-card p-4 sticky-top" style="top:20px">
+        <h5 class="mb-3 text-center">پیش‌نمایش نسخه</h5>
+        <div id="previewBox" class="border rounded p-3 bg-white" style="min-height:400px">
+          <div class="text-center text-muted">
+            <p>دارو و مریض را انتخاب کنید تا پیش‌نمایش نمایش داده شود</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-<script src="assets/js/auth.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-let drugCounter = 0;
+// داروهای موجود در انبار (نمونه)
+const inventoryDrugs = [
+  {id:1, name:"آموکسی‌سیلین ۵۰۰", stock:45, unit:"کپسول"},
+  {id:2, name:"ایبوپروفن ۴۰۰", stock:60, unit:"قرص"},
+  {id:3, name:"مترونیدازول ۲۵۰", stock:30, unit:"قرص"},
+  {id:4, name:"ژل کلرهگزیدین", stock:18, unit:"تیوب"},
+  {id:5, name:"استامینوفن ۵۰۰", stock:80, unit:"قرص"},
+  {id:6, name:"دگزامتازون", stock:25, unit:"آمپول"},
+  {id:7, name:"لیدوکائین", stock:40, unit:"ویال"},
+];
 
-function addDrugRow() {
-  drugCounter++;
-  const html = `
-    <div class="row g-2 mb-3 drug-row" id="drugRow${drugCounter}">
-      <div class="col-5">
-        <input type="text" class="form-control" placeholder="نام دارو" id="drugName${drugCounter}">
-      </div>
-      <div class="col-3">
-        <input type="text" class="form-control" placeholder="دوز" id="dosage${drugCounter}">
-      </div>
-      <div class="col-3">
-        <input type="text" class="form-control" placeholder="تعداد" id="quantity${drugCounter}">
-      </div>
-      <div class="col-1">
-        <button class="btn btn-danger btn-sm" onclick="removeDrug(${drugCounter})">×</button>
-      </div>
-    </div>`;
+let selectedDrugs = [];
+
+// جستجوی دارو
+function searchDrugs() {
+  const query = document.getElementById('drugSearch').value.toLowerCase().trim();
+  const resultsBox = document.getElementById('searchResults');
+
+  if (query.length < 1) {
+    resultsBox.style.display = 'none';
+    return;
+  }
+
+  const filtered = inventoryDrugs.filter(d => d.name.toLowerCase().includes(query));
   
-  document.getElementById('drugsList').innerHTML += html;
+  if (filtered.length === 0) {
+    resultsBox.innerHTML = `<div class="p-2 text-muted">دارویی یافت نشد</div>`;
+  } else {
+    resultsBox.innerHTML = filtered.map(d => `
+      <div class="search-result" onclick="addDrug(${d.id})">
+        <strong>${d.name}</strong>
+        <small class="text-muted"> (موجودی: ${d.stock} ${d.unit})</small>
+      </div>
+    `).join('');
+  }
+  resultsBox.style.display = 'block';
+}
+
+// اضافه کردن دارو به نسخه
+function addDrug(id) {
+  const drug = inventoryDrugs.find(d => d.id === id);
+  if (!drug) return;
+
+  // جلوگیری از تکراری
+  if (selectedDrugs.find(d => d.id === id)) {
+    alert("این دارو قبلاً اضافه شده است");
+    return;
+  }
+
+  selectedDrugs.push({
+    id: drug.id,
+    name: drug.name,
+    dosage: "",
+    quantity: 1,
+    unit: drug.unit
+  });
+
+  document.getElementById('drugSearch').value = '';
+  document.getElementById('searchResults').style.display = 'none';
+  renderSelectedDrugs();
   updatePreview();
 }
 
-document.querySelector(".")
+// نمایش داروهای انتخاب شده
+function renderSelectedDrugs() {
+  const container = document.getElementById('selectedDrugs');
+  
+  if (selectedDrugs.length === 0) {
+    container.innerHTML = `<p class="text-muted">هنوز دارویی اضافه نشده</p>`;
+    return;
+  }
 
-function removeDrug(id) {
-  document.getElementById(`drugRow${id}`).remove();
+  container.innerHTML = selectedDrugs.map((d, index) => `
+    <div class="drug-item">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <strong>${d.name}</strong>
+        <button class="btn btn-sm btn-outline-danger" onclick="removeDrug(${index})">×</button>
+      </div>
+      <div class="row g-2">
+        <div class="col-6">
+          <input type="text" class="form-control form-control-sm" placeholder="دوز (مثلاً هر ۸ ساعت)" 
+                 value="${d.dosage}" onchange="selectedDrugs[${index}].dosage = this.value; updatePreview()">
+        </div>
+        <div class="col-4">
+          <input type="number" class="form-control form-control-sm" placeholder="تعداد" min="1"
+                 value="${d.quantity}" onchange="selectedDrugs[${index}].quantity = this.value; updatePreview()">
+        </div>
+        <div class="col-2">
+          <small class="text-muted">${d.unit}</small>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function removeDrug(index) {
+  selectedDrugs.splice(index, 1);
+  renderSelectedDrugs();
   updatePreview();
 }
 
+// پیش‌نمایش نسخه
 function updatePreview() {
-  // این تابع بعداً کامل‌تر می‌شود
+  const patientSelect = document.getElementById('patient_id');
+  const patientName = patientSelect.options[patientSelect.selectedIndex]?.text || "مریض انتخاب نشده";
+  const instructions = document.getElementById('instructions').value;
+
+  let drugsHtml = selectedDrugs.length > 0 
+    ? selectedDrugs.map((d, i) => `
+        <div class="mb-2">
+          <strong>${i+1}. ${d.name}</strong><br>
+          <small>${d.dosage || 'دوز مشخص نشده'} - تعداد: ${d.quantity} ${d.unit}</small>
+        </div>
+      `).join('')
+    : '<p class="text-muted">دارویی اضافه نشده</p>';
+
+  document.getElementById('previewBox').innerHTML = `
+    <div class="text-center mb-3">
+      <h5>🦷 کلینیک دندانپزشکی امید</h5>
+      <small>نسخه پزشکی</small>
+    </div>
+    <hr>
+    <p><strong>مریض:</strong> ${patientName}</p>
+    <p><strong>داکتر:</strong> داکتر احمد رحمانی</p>
+    <p><strong>تاریخ:</strong> ${new Date().toLocaleDateString('fa-IR')}</p>
+    <hr>
+    <h6>داروها:</h6>
+    ${drugsHtml}
+    <hr>
+    <p><strong>دستورات:</strong><br>${instructions || '-'}</p>
+  `;
 }
 
+// ذخیره نسخه
 function savePrescription() {
-  alert("✅ نسخه با موفقیت ذخیره و ثبت شد!");
+  if (selectedDrugs.length === 0) {
+    alert("لطفاً حداقل یک دارو اضافه کنید");
+    return;
+  }
+  alert("✅ نسخه با موفقیت ذخیره شد!");
 }
 
+// چاپ
 function printPrescription() {
-  alert("🖨️ نسخه برای چاپ ارسال شد (در نسخه کامل به پرینتر متصل می‌شود)");
+  updatePreview();
+  window.print();
 }
 
-// اولین دارو به صورت پیش‌فرض
-window.onload = () => {
-  addDrugRow();
-};
+// رویداد تغییر مریض
+document.getElementById('patient_id').addEventListener('change', updatePreview);
+document.getElementById('instructions').addEventListener('input', updatePreview);
 </script>
 </body>
 </html>
