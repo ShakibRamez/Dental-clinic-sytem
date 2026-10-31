@@ -139,7 +139,7 @@ async function saveUser() {
       b = false;
     }
   })
-  if(!RegExp("^[a-zA-Z_\s]$").test(full_name)){
+  if(!RegExp("^[a-zA-Z_\s]+$").test(full_name)){
     alert("❌ نام کامل باید با حروف باشد!");
     b = false;
   }

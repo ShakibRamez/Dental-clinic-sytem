@@ -33,7 +33,24 @@ function logout() {
 }
 
 function getCurrentUser() {
-  return sessionStorage.getItem('full_name') || sessionStorage.getItem('user_name') || 'کاربر';
+  return {full_name: sessionStorage.getItem('full_name'), user_name: sessionStorage.getItem('user_name')};
+}
+
+async function getAllUsers(){
+  try{
+    const response = await fetch("/api/users");
+
+    if(!response.ok){
+      throw new Error("Failed To Fetch Users!")
+    }
+
+    const users = await response.json();
+
+    return users;
+  }catch(error){
+    console.error(error);
+    return error;
+  }
 }
 
 if (!isLoginPage()) checkLogin();
