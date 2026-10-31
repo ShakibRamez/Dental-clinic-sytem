@@ -1,99 +1,39 @@
-// auth.js - سیستم لاگین امن (نسخه نهایی)
+// auth.js — session handling (no credentials stored on the client)
+const isLoginPage = () => /(^|\/)login(\.html)?\/?$/.test(location.pathname);
 
-
-// فعال کردن لینک فعال در سایدبار
-document.querySelectorAll('.nav-link').forEach(link => {
-  link.addEventListener('click', function() {
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    this.classList.add('active');
-  });
-});
-
-
-// auth.js - سیستم لاگین امن 
-const VALID_USERNAME = "admin";
-const VALID_PASSWORD = "1234";
-// دریافت یوزر و پسورد از فرم لاگین
-async function getUsers() {
-    const response = await fetch('/api/users')
-    const users = await response.json();
-
-    return users;
-}
-
-// لاگین کردن
 async function login(username, password) {
-
-    const response = await fetch('/api/users/login', {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        credentials: "same-origin",
-        body: JSON.stringify({
-            username,
-            password
-        })
-    })
-
-    const result = await response.text();
-
-    const isLoggedIn = response.ok;
-    if(isLoggedIn){
-        sessionStorage.setItem('isLoggedIn', isLoggedIn);
-        sessionStorage.setItem('full_name', JSON.parse(result).user.full_name);
-        sessionStorage.setItem('user_name', JSON.parse(result).user.username);
-        return isLoggedIn;
-    }
-    return isLoggedIn;
+  try {
+    const res = await fetch('/api/users/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ username, password }),
+    });
+    if (!res.ok) return { ok: false, message: res.status === 401 ? 'نام کاربری یا رمز عبور اشتباه است' : 'خطا در ورود، دوباره تلاش کنید' };
+    const { user } = await res.json();
+    sessionStorage.setItem('isLoggedIn', 'true');
+    sessionStorage.setItem('full_name', user.full_name || user.username);
+    sessionStorage.setItem('user_name', user.username);
+    return { ok: true };
+  } catch {
+    return { ok: false, message: 'ارتباط با سرور برقرار نشد' };
+  }
 }
 
-
-
-// چک کردن لاگین
-async function checkLogin() {
-    const isLoggedIn = sessionStorage.getItem('isLoggedIn')
-    if (!isLoggedIn) {
-        alert("⚠️ شما وارد نشده‌اید!\nلطفاً ابتدا لاگین کنید.");
-        window.location.href = "login.html";
-        return false;
-    }
-    return true;
+function checkLogin() {
+  if (sessionStorage.getItem('isLoggedIn') === 'true') return true;
+  (window.top || window).location.replace('login.html');
+  return false;
 }
 
-
-// اجرا خودکار چک لاگین (به جز صفحه لاگین)
-if(!window.location.pathname.endsWith("login.html")) {
-        checkLogin();
+function logout() {
+  if (!confirm('آیا از خروج مطمئن هستید؟')) return;
+  sessionStorage.clear();
+  (window.top || window).location.replace('login.html');
 }
 
-
-
-
-
-// خروج از سیستم
-async function logout() {
-    if (confirm("آیا از خروج مطمئن هستید؟")) {
-        sessionStorage.clear();
-        window.location.href = "login.html";
-    }
-}
-
-// نمایش نام کاربر لاگین شده
 function getCurrentUser() {
-    return sessionStorage.getItem("username") || "کاربر";
+  return sessionStorage.getItem('full_name') || sessionStorage.getItem('user_name') || 'کاربر';
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+if (!isLoginPage()) checkLogin();

@@ -4,108 +4,75 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ورود به سیستم - کلینیک دندانپزشکی</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script>document.documentElement.setAttribute('data-bs-theme', localStorage.getItem('theme') || 'light')</script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/style.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap');
-    
-    body {
-      font-family: 'Vazirmatn', sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    .login-container {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px);
-      border-radius: 24px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      width: 100%;
-      max-width: 420px;
-      padding: 50px 40px;
-    }
-    .logo {
-      font-size: 4.5rem;
-      margin-bottom: 10px;
-    }
-    .form-control {
-      border-radius: 12px;
-      padding: 14px 16px;
-      border: 2px solid #e2e8f0;
-    }
-    .form-control:focus {
-      border-color: #1e40af;
-      box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.15);
-    }
-    .btn-login {
-      border-radius: 12px;
-      padding: 14px;
-      font-weight: 600;
-      font-size: 1.1rem;
-      background: linear-gradient(135deg, #1e40af, #3b82f6);
-    }
+    body { display: grid; place-items: center; padding: 16px; }
+    .login-card { width: 100%; max-width: 400px; padding: 40px 34px; background: var(--card); border: 1px solid var(--line);
+      border-radius: 20px; box-shadow: 0 20px 50px rgba(15,23,42,.08); }
+    .logo { width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 16px; display: grid; place-items: center;
+      font-size: 1.6rem; background: var(--accent-soft); color: var(--accent-strong); }
+    .form-control { padding: .75rem 1rem; }
+    .btn-login { padding: .75rem; font-weight: 600; }
+    .pw-toggle { position: absolute; inset-block: 0; inset-inline-start: 4px; border: 0; background: none; color: var(--muted); padding: 0 12px; }
   </style>
 </head>
 <body>
-
-  <div class="login-container">
-    <div class="text-center mb-5">
-      <div class="logo">🦷</div>
-      <h2 class="fw-bold text-dark">کلینیک دندانپزشکی</h2>
-      <p class="text-muted">سیستم مدیریت حرفه‌ای</p>
+  <div class="login-card">
+    <div class="text-center mb-4">
+      <div class="logo"><i class="bi bi-heart-pulse-fill"></i></div>
+      <h4 class="fw-bold mb-1">کلینیک دندانپزشکی</h4>
+      <p class="text-secondary mb-0">برای ادامه وارد حساب خود شوید</p>
     </div>
 
-    <form id="loginForm">
-      <div class="mb-4">
-        <label class="form-label fw-bold">نام کاربری</label>
-        <input type="text" class="form-control form-control-lg" id="username" placeholder="admin" required>
-      </div>
-      <div class="mb-4">
-        <label class="form-label fw-bold">رمز عبور</label>
-        <input type="password" class="form-control form-control-lg" id="password" placeholder="1234" required>
-      </div>
+    <div id="err" class="alert alert-danger py-2 small d-none" role="alert"></div>
 
-      <button type="submit" class="btn btn-primary btn-login w-100">
-        ورود به سیستم
+    <form id="loginForm" novalidate>
+      <div class="mb-3">
+        <label for="username" class="form-label fw-bold">نام کاربری</label>
+        <input type="text" class="form-control" id="username" autocomplete="username" required autofocus>
+      </div>
+      <div class="mb-4">
+        <label for="password" class="form-label fw-bold">رمز عبور</label>
+        <div class="position-relative">
+          <input type="password" class="form-control" id="password" autocomplete="current-password" required>
+          <button type="button" class="pw-toggle" id="pwToggle" aria-label="نمایش رمز"><i class="bi bi-eye"></i></button>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-login w-100" id="submitBtn">
+        <span class="spinner-border spinner-border-sm d-none me-2" id="spin"></span>ورود به سیستم
       </button>
     </form>
-
-    <div class="text-center mt-4">
-      <small class="text-muted">برای تست: <strong>admin / 1234</strong></small>
-    </div>
   </div>
 
+<script src="./assets/js/app.js"></script>
 <script src="./assets/js/auth.js"></script>
 <script>
-document.getElementById('loginForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  submitForm();
-});
+  const $ = id => document.getElementById(id);
+  if (sessionStorage.getItem('isLoggedIn') === 'true') location.replace('index.html');
 
-document.addEventListener('keydown', async function(e) {
-  if (e.key === 'Enter') {
+  $('pwToggle').onclick = () => {
+    const show = $('password').type === 'password';
+    $('password').type = show ? 'text' : 'password';
+    $('pwToggle').firstElementChild.className = 'bi bi-eye' + (show ? '-slash' : '');
+  };
+
+  $('loginForm').addEventListener('submit', async e => {
     e.preventDefault();
-    await submitForm();
-  }
-})
+    const username = $('username').value.trim(), password = $('password').value;
+    $('err').classList.add('d-none');
+    if (!username || !password) return showErr('نام کاربری و رمز عبور را وارد کنید');
 
-async function submitForm() {
-  const username = document.getElementById('username').value.trim();
-  const password = document.getElementById('password').value.trim();
-
-
-  
-  if (await login(username, password)) {
-    window.location.href = "/loading";
-  } else {
-    alert("❌ نام کاربری یا رمز عبور اشتباه است!\n\nadmin / 1234");
-  }
-}
+    $('submitBtn').disabled = true; $('spin').classList.remove('d-none');
+    const r = await login(username, password);
+    if (r.ok) return (window.location.href = '/loading');
+    showErr(r.message);
+    $('submitBtn').disabled = false; $('spin').classList.add('d-none');
+    $('password').select();
+  });
+  function showErr(m) { $('err').textContent = m; $('err').classList.remove('d-none'); }
 </script>
-
 </body>
 </html>
