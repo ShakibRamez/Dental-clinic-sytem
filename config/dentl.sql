@@ -42,7 +42,7 @@ CREATE TABLE patients (
 
 CREATE TABLE doctors (
     id SERIAL PRIMARY KEY,
-    specializtion VARCHAR(50) NOT NULL,
+    specialization VARCHAR(50) NOT NULL,
     email VARCHAR(150),
     start_time TIME,
     end_time TIME,
@@ -306,7 +306,7 @@ FOR EACH ROW EXECUTE FUNCTION audit_trigger_func();
 
 CREATE VIEW today_dashboard AS
 SELECT 
-    (SELECT COUNT(*) FROM appointments WHERE slot_date = CURRENT_DATE) AS today_appointments,
+    (SELECT COUNT(*) FROM appointment_slots WHERE slot_date = CURRENT_DATE) AS today_appointments,
     (SELECT COUNT(*) FROM visits WHERE visit_date = CURRENT_DATE) AS today_visits,
     (SELECT COALESCE(SUM(final_amount), 0) FROM invoices WHERE DATE(created_at) = CURRENT_DATE AND status = 'paid') AS today_revenue,
     (SELECT COUNT(*) FROM patients WHERE DATE(created_at) = CURRENT_DATE) AS new_patients_today;
@@ -333,7 +333,7 @@ ORDER BY month DESC;
 -- 7. Performance Indexes
 -- =============================================
 
-CREATE INDEX idx_appointments_date ON appointments(slot_date);
+CREATE INDEX idx_appointments_date ON appointment_slots(slot_date);
 CREATE INDEX idx_visits_date ON visits(visit_date);
 CREATE INDEX idx_invoices_created_at ON invoices(created_at);
 CREATE INDEX idx_patients_phone ON patients(phone);
