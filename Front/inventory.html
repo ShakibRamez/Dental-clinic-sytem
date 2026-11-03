@@ -158,7 +158,7 @@ function renderInventory(data = inventory) {
       <td>${item.category}</td>
       <td><strong>${item.stock}</strong></td>
       <td>${item.minStock}</td>
-      <td>${item.price.toLocaleString('fa-IR')} ؋</td>
+      <td>${item.price.toLocaleString('fa-AF')} ؋</td>
       <td>
         ${item.stock < item.minStock 
           ? '<span class="badge bg-danger">کم</span>' 
@@ -184,7 +184,7 @@ function updateStats() {
   document.getElementById('criticalCount').textContent = critical.length;
   
   const totalValue = inventory.reduce((sum, i) => sum + (i.stock * i.price), 0);
-  document.getElementById('totalValue').textContent = totalValue.toLocaleString('fa-IR') + ' ؋';
+  document.getElementById('totalValue').textContent = totalValue.toLocaleString('fa-AF') + ' ؋';
 }
 
 function filterItems() {

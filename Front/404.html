@@ -1,19 +1,36 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پیدا نشد</title>
-    <style>
-        h1{ color: #999;
-            text-align: center;
-            margin-top: 17%;
-            font-size: 92px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - صفحه پیدا نشد</title>
+  <script>document.documentElement.setAttribute('data-bs-theme', localStorage.getItem('theme') || 'light')</script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="stylesheet" href="./assets/css/error.css">
 </head>
-<body>
-    <h1>صفحه ی اشتباه وارد شده اید</h1>
+<body class="err" style="--tone: #0d9488">
+  <div class="orbs"><span></span><span></span></div>
+  <main class="err-card" role="main">
+    <div class="err-icon"><i class="bi bi-compass"></i></div>
+    <div class="err-code">404</div>
+    <h3 class="err-title">صفحه پیدا نشد</h3>
+    <p class="err-text">آدرسی که وارد کرده‌اید وجود ندارد یا جابه‌جا شده است. از میان بخش‌های زیر یکی را انتخاب کنید.</p>
+<div class="quick"><a href="index.html"><i class="bi bi-speedometer2"></i>داشبورد</a><a href="index.html#patients2"><i class="bi bi-people"></i>مریضان</a><a href="index.html#appointments"><i class="bi bi-calendar-check"></i>نوبت‌دهی</a><a href="index.html#invoices"><i class="bi bi-receipt"></i>فاکتورها</a></div>
+    <div class="err-actions"><button class="btn btn-primary" onclick="history.back()"><i class="bi bi-arrow-right"></i> بازگشت</button><a class="btn btn-outline-secondary" href="index.html"><i class="bi bi-house"></i> صفحهٔ اصلی</a></div>
+    <div class="err-meta">
+      <span><i class="bi bi-calendar3"></i> <span id="when"></span></span>
+      <span><i class="bi bi-link-45deg"></i> <code id="path"></code></span>
+      
+    </div>
+  </main>
+<script src="./assets/js/app.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  $('when').textContent = AF.long() + ' • ' + AF.time();
+  $('path').textContent = location.pathname;
 
-    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+</script>
 </body>
 </html>

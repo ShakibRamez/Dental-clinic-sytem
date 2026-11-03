@@ -222,7 +222,7 @@ function savePatient() {
     gender: document.getElementById('gender').value,
     address: document.getElementById('address').value,
     medical_notes: document.getElementById('medical_notes').value,
-    last_visit: new Date().toLocaleDateString('fa-IR')
+    last_visit: AF.numeric()
   };
 
   if (editMode && id) {

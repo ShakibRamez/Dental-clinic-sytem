@@ -3,49 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ورود به سیستم - کلینیک دندانپزشکی</title>
+  <title>ورود به سیستم - کلینیک دندان‌پزشکی</title>
   <script>document.documentElement.setAttribute('data-bs-theme', localStorage.getItem('theme') || 'light')</script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/style.css">
   <style>
-    body { display: grid; place-items: center; padding: 16px; }
-    .login-card { width: 100%; max-width: 400px; padding: 40px 34px; background: var(--card); border: 1px solid var(--line);
-      border-radius: 20px; box-shadow: 0 20px 50px rgba(15,23,42,.08); }
-    .logo { width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 16px; display: grid; place-items: center;
-      font-size: 1.6rem; background: var(--accent-soft); color: var(--accent-strong); }
-    .form-control { padding: .75rem 1rem; }
-    .btn-login { padding: .75rem; font-weight: 600; }
-    .pw-toggle { position: absolute; inset-block: 0; inset-inline-start: 4px; border: 0; background: none; color: var(--muted); padding: 0 12px; }
+    body { min-height: 100vh; display: grid; place-items: center; padding: 20px; overflow-x: hidden; position: relative;
+      background: radial-gradient(900px 500px at 85% 0%, rgba(20,184,166,.35), transparent 60%),
+                  radial-gradient(700px 500px at 0% 100%, rgba(14,116,144,.35), transparent 60%),
+                  linear-gradient(135deg, #0b2f33, #0f4a4d 55%, #11676a); }
+    .blob { position: fixed; border-radius: 50%; filter: blur(70px); opacity: .45; animation: drift 14s ease-in-out infinite alternate; pointer-events: none; }
+    .blob.b1 { width: 360px; height: 360px; background: #2dd4bf; top: -120px; inset-inline-start: -80px; }
+    .blob.b2 { width: 300px; height: 300px; background: #38bdf8; bottom: -100px; inset-inline-end: -60px; animation-delay: -6s; }
+    @keyframes drift { to { transform: translate(40px, 30px) scale(1.15); } }
+
+    .shell-card { width: 100%; max-width: 960px; display: grid; grid-template-columns: 1fr 1fr; border-radius: 28px; overflow: hidden;
+      background: var(--card); box-shadow: 0 40px 100px rgba(0,0,0,.4); animation: popIn .7s cubic-bezier(.2,.8,.2,1) both; position: relative; z-index: 1; }
+    .form-side { padding: 48px 44px; display: flex; flex-direction: column; justify-content: center; }
+    .brand-side { position: relative; padding: 48px 40px; color: #fff; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
+      background: linear-gradient(160deg, #0f766e 0%, #0b4f55 60%, #0a3a45 100%); }
+    .brand-side::before, .brand-side::after { content: ""; position: absolute; border-radius: 50%; border: 1px solid rgba(255,255,255,.14); }
+    .brand-side::before { width: 420px; height: 420px; top: -140px; inset-inline-end: -140px; animation: spin 40s linear infinite; border-style: dashed; }
+    .brand-side::after { width: 280px; height: 280px; bottom: -100px; inset-inline-start: -90px; animation: spin 30s linear infinite reverse; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .brand-side > * { position: relative; z-index: 1; }
+    .logo { width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; font-size: 1.9rem; background: rgba(255,255,255,.14); backdrop-filter: blur(6px); animation: float 4s ease-in-out infinite; }
+    @keyframes float { 50% { transform: translateY(-8px); } }
+    .feat { display: flex; gap: 12px; align-items: center; padding: 10px 0; animation: slideIn .6s ease backwards; }
+    .feat:nth-child(1) { animation-delay: .5s } .feat:nth-child(2) { animation-delay: .65s } .feat:nth-child(3) { animation-delay: .8s } .feat:nth-child(4) { animation-delay: .95s }
+    .feat i { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; background: rgba(255,255,255,.12); color: #5eead4; flex: none; }
+    .clock { margin-top: 28px; font-size: .85rem; opacity: .85; display: flex; gap: 8px; align-items: center; }
+
+    .fx { animation: rise .6s cubic-bezier(.2,.7,.2,1) backwards; }
+    .fx:nth-child(1) { animation-delay: .25s } .fx:nth-child(2) { animation-delay: .35s } .fx:nth-child(3) { animation-delay: .45s } .fx:nth-child(4) { animation-delay: .55s } .fx:nth-child(5) { animation-delay: .65s }
+    .form-control { padding: .8rem 1rem; background: var(--bg); border-color: transparent; }
+    .form-control:focus { background: var(--card); }
+    .has-eye .form-control { padding-inline-end: 3rem; }
+    .pw-toggle { position: absolute; top: 50%; transform: translateY(-50%); inset-inline-end: 8px; border: 0; background: none; color: var(--muted); width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; }
+    .pw-toggle:hover { background: var(--accent-soft); color: var(--accent-strong); }
+    .btn-login { padding: .8rem; font-weight: 600; position: relative; overflow: hidden; }
+    .btn-login::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.28) 50%, transparent 70%); transform: translateX(120%); transition: transform .6s; }
+    .btn-login:hover::after { transform: translateX(-120%); }
+    .theme-fab { position: fixed; top: 16px; inset-inline-start: 16px; z-index: 5; width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.12); color: #fff; backdrop-filter: blur(8px); }
+    @media (max-width: 820px) { .shell-card { grid-template-columns: 1fr; max-width: 460px; } .brand-side { display: none; } .form-side { padding: 36px 26px; } }
   </style>
 </head>
 <body>
-  <div class="login-card">
-    <div class="text-center mb-4">
-      <div class="logo"><i class="bi bi-heart-pulse-fill"></i></div>
-      <h4 class="fw-bold mb-1">کلینیک دندانپزشکی</h4>
-      <p class="text-secondary mb-0">برای ادامه وارد حساب خود شوید</p>
-    </div>
+  <div class="blob b1"></div><div class="blob b2"></div>
+  <button class="theme-fab" id="themeBtn" aria-label="تغییر تم"><i class="bi bi-moon-stars"></i></button>
 
-    <div id="err" class="alert alert-danger py-2 small d-none" role="alert"></div>
-
-    <form id="loginForm" novalidate>
-      <div class="mb-3">
-        <label for="username" class="form-label fw-bold">نام کاربری</label>
-        <input type="text" class="form-control" id="username" autocomplete="username" required autofocus>
+  <main class="shell-card">
+    <section class="form-side">
+      <div class="fx mb-4">
+        <div class="text-muted small mb-1" id="greet"></div>
+        <h3 class="fw-bold mb-1">ورود به سیستم</h3>
+        <p class="text-muted mb-0">برای ادامه، اطلاعات حساب خود را وارد کنید.</p>
       </div>
-      <div class="mb-4">
-        <label for="password" class="form-label fw-bold">رمز عبور</label>
-        <div class="position-relative">
-          <input type="password" class="form-control" id="password" autocomplete="current-password" required>
-          <button type="button" class="pw-toggle" id="pwToggle" aria-label="نمایش رمز"><i class="bi bi-eye"></i></button>
+
+      <div id="err" class="alert alert-danger py-2 small d-none" role="alert"></div>
+
+      <form id="loginForm" novalidate>
+        <div class="mb-3 fx">
+          <label for="username" class="form-label">نام کاربری</label>
+          <input type="text" class="form-control" id="username" autocomplete="username" required autofocus>
+        </div>
+        <div class="mb-4 fx">
+          <label for="password" class="form-label">رمز عبور</label>
+          <div class="position-relative has-eye">
+            <input type="password" class="form-control" id="password" autocomplete="current-password" required>
+            <button type="button" class="pw-toggle" id="pwToggle" aria-label="نمایش رمز"><i class="bi bi-eye"></i></button>
+          </div>
+          <div class="small text-warning mt-2 d-none" id="caps"><i class="bi bi-exclamation-triangle"></i> Caps Lock روشن است</div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-login w-100 fx" id="submitBtn">
+          <span class="spinner-border spinner-border-sm d-none me-2" id="spin"></span><span id="btnTxt">ورود به سیستم</span>
+        </button>
+      </form>
+      <div class="text-center text-muted small mt-4 fx"><i class="bi bi-shield-lock"></i> اتصال امن • اطلاعات شما محافظت می‌شود</div>
+    </section>
+
+    <section class="brand-side">
+      <div>
+        <div class="logo mb-3"><i class="bi bi-heart-pulse-fill"></i></div>
+        <h2 class="fw-bold mb-1">کلینیک دندان‌پزشکی</h2>
+        <p class="opacity-75 mb-4">مدیریت هوشمند مریضان، نوبت‌ها و حساب‌ها</p>
+        <div>
+          <div class="feat"><i class="bi bi-calendar-check"></i><span>نوبت‌دهی و ویزیت با تقویم افغانی</span></div>
+          <div class="feat"><i class="bi bi-prescription2"></i><span>نسخه‌نویسی و پلان درمان</span></div>
+          <div class="feat"><i class="bi bi-receipt"></i><span>فاکتور و حساب به افغانی ؋</span></div>
+          <div class="feat"><i class="bi bi-box-seam"></i><span>کنترل انبار و گزارش‌های مالی</span></div>
         </div>
       </div>
-      <button type="submit" class="btn btn-primary btn-login w-100" id="submitBtn">
-        <span class="spinner-border spinner-border-sm d-none me-2" id="spin"></span>ورود به سیستم
-      </button>
-    </form>
-  </div>
+      <div class="clock"><i class="bi bi-clock"></i><span id="clock"></span></div>
+    </section>
+  </main>
 
 <script src="./assets/js/app.js"></script>
 <script src="./assets/js/auth.js"></script>
@@ -53,26 +105,36 @@
   const $ = id => document.getElementById(id);
   if (sessionStorage.getItem('isLoggedIn') === 'true') location.replace('index.html');
 
+  $('greet').textContent = AF.greeting() + '، امروز ' + AF.long();
+  const tick = () => $('clock').textContent = AF.long() + ' • ' + AF.time() + ' (وقت کابل)';
+  tick(); setInterval(tick, 20000);
+
+  const themeIcon = () => $('themeBtn').firstElementChild.className = 'bi bi-' + (localStorage.getItem('theme') === 'dark' ? 'sun' : 'moon-stars');
+  $('themeBtn').onclick = () => { toggleTheme(); themeIcon(); }; themeIcon();
+
   $('pwToggle').onclick = () => {
     const show = $('password').type === 'password';
     $('password').type = show ? 'text' : 'password';
     $('pwToggle').firstElementChild.className = 'bi bi-eye' + (show ? '-slash' : '');
   };
+  $('password').addEventListener('keyup', e => $('caps').classList.toggle('d-none', !e.getModifierState('CapsLock')));
 
   $('loginForm').addEventListener('submit', async e => {
     e.preventDefault();
     const username = $('username').value.trim(), password = $('password').value;
     $('err').classList.add('d-none');
-    if (!username || !password) return showErr('نام کاربری و رمز عبور را وارد کنید');
+    if (!username || !password) return fail('نام کاربری و رمز عبور را وارد کنید');
 
-    $('submitBtn').disabled = true; $('spin').classList.remove('d-none');
+    busy(true);
     const r = await login(username, password);
-    if (r.ok) return (window.location.href = '/loading');
-    showErr(r.message);
-    $('submitBtn').disabled = false; $('spin').classList.add('d-none');
-    $('password').select();
+    if (r.ok) { $('btnTxt').textContent = 'ورود موفق ✓'; return setTimeout(() => (location.href = 'loading.html'), 350); }
+    busy(false); fail(r.message); $('password').select();
   });
-  function showErr(m) { $('err').textContent = m; $('err').classList.remove('d-none'); }
+  function busy(on) { $('submitBtn').disabled = on; $('spin').classList.toggle('d-none', !on); $('btnTxt').textContent = on ? 'در حال بررسی…' : 'ورود به سیستم'; }
+  function fail(m) {
+    $('err').textContent = m; $('err').classList.remove('d-none');
+    const c = document.querySelector('.shell-card'); c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
+  }
 </script>
 </body>
 </html>
