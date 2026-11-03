@@ -124,5 +124,89 @@
     });
   }
   const ready = f => document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', f) : f();
-  ready(() => { stagger(); dateHints(); setTimeout(numbers, 150); });
+  function fillDates() {
+    document.querySelectorAll('[data-af-ago]').forEach(e => { e.textContent = AF.numeric(AF.daysAgo(+e.dataset.afAgo)); });
+    document.querySelectorAll('[data-af-year]').forEach(e => { e.textContent = AF.faDigits(AF.parts().y); });
+  }
+  ready(() => { fillDates(); stagger(); dateHints(); setTimeout(numbers, 150); });
+})();
+
+// ================= صفحه‌بندی (Pagination) =================
+// هر لیست/جدول بعد از تعداد مشخص (پیش‌فرض ۱۰ مورد) به صفحهٔ بعد می‌رود.
+// با تغییر داده‌ها (ثبت، حذف، جست‌وجو) خودکار دوباره محاسبه می‌شود.
+(function () {
+  const AUTO = { patientsBody: 10, appointmentsBody: 10, visitsBody: 10, invoicesBody: 10, inventoryBody: 10, usersBody: 10, backupsBody: 10, doctorsContainer: 6, plansContainer: 6 };
+  const fa = n => (window.AF ? AF.faDigits(n) : String(n));
+
+  function paginate(container, def) {
+    if (!container || container._pager) return;
+    const key = 'pgSize:' + location.pathname.split('/').pop() + ':' + container.id;
+    const sizes = def <= 6 ? [6, 12, 24, 0] : [5, 10, 20, 50, 0];
+    let size = parseInt(localStorage.getItem(key), 10);
+    if (isNaN(size) || !sizes.includes(size)) size = def;
+    let page = 1, prevCount = -1, queued = false;
+
+    const bar = document.createElement('div');
+    bar.className = 'pager d-flex flex-wrap align-items-center justify-content-between gap-3 mt-3';
+    bar.innerHTML = '<div class="small text-muted pager-info"></div><nav aria-label="صفحه‌بندی"><ul class="pagination pagination-sm mb-0 pager-pages"></ul></nav>' +
+      '<label class="d-flex align-items-center gap-2 small text-muted mb-0">در هر صفحه<select class="form-select form-select-sm w-auto">' +
+      sizes.map(s => `<option value="${s}">${s ? fa(s) : 'همه'}</option>`).join('') + '</select></label>';
+    const host = container.closest('.table-responsive') || (container.tagName === 'TBODY' ? container.closest('table') : container);
+    host.insertAdjacentElement('afterend', bar);
+    const info = bar.querySelector('.pager-info'), ul = bar.querySelector('ul'), sel = bar.querySelector('select');
+    sel.value = size;
+    sel.onchange = () => { size = parseInt(sel.value, 10); localStorage.setItem(key, size); page = 1; render(true); };
+
+    function pageList(cur, total) {                     // ۱ … ۴ ۵ ۶ … ۹
+      if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+      const s = new Set([1, total, cur, cur - 1, cur + 1]);
+      if (cur <= 3) [2, 3, 4].forEach(x => s.add(x));
+      if (cur >= total - 2) [total - 1, total - 2, total - 3].forEach(x => s.add(x));
+      const arr = [...s].filter(x => x >= 1 && x <= total).sort((a, b) => a - b), out = [];
+      arr.forEach((x, i) => { if (i && x - arr[i - 1] > 1) out.push('…'); out.push(x); });
+      return out;
+    }
+
+    function render(animate) {
+      queued = false;
+      const items = [...container.children];
+      const total = items.length;
+      if (prevCount !== -1 && Math.abs(total - prevCount) > 1) page = 1;   // جست‌وجو/فیلتر → از صفحهٔ اول
+      prevCount = total;
+      const per = size || total || 1, pages = Math.max(1, Math.ceil(total / per));
+      page = Math.min(Math.max(1, page), pages);
+      const from = (page - 1) * per, to = from + per;
+      let k = 0;
+      items.forEach((el, i) => {
+        const show = i >= from && i < to;
+        el.classList.toggle('pg-hide', !show);
+        if (show) { el.style.animationDelay = Math.min(k++ * 40, 400) + 'ms'; if (animate) { el.style.animationName = 'none'; void el.offsetWidth; el.style.animationName = ''; } }
+      });
+      bar.classList.toggle('d-none', total === 0);
+      info.textContent = total ? `نمایش ${fa(from + 1)} تا ${fa(Math.min(to, total))} از ${fa(total)} مورد` : '';
+      ul.innerHTML = '';
+      const li = (html, p, cls = '') => {
+        const e = document.createElement('li'); e.className = 'page-item ' + cls;
+        e.innerHTML = `<a class="page-link" href="#" ${p ? '' : 'tabindex="-1"'}>${html}</a>`;
+        if (p) e.firstChild.onclick = ev => { ev.preventDefault(); page = p; render(true); host.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); };
+        ul.appendChild(e);
+      };
+      ul.classList.toggle('d-none', pages <= 1);
+      li('<i class="bi bi-chevron-right"></i> قبلی', page > 1 ? page - 1 : 0, page === 1 ? 'disabled' : '');
+      pageList(page, pages).forEach(x => x === '…' ? li('…', 0, 'disabled') : li(fa(x), x, x === page ? 'active' : ''));
+      li('بعدی <i class="bi bi-chevron-left"></i>', page < pages ? page + 1 : 0, page === pages ? 'disabled' : '');
+    }
+
+    const mo = new MutationObserver(() => { if (!queued) { queued = true; requestAnimationFrame(() => render(false)); } });
+    mo.observe(container, { childList: true });
+    container._pager = { render, go: p => { page = p; render(true); } };
+    render(false);
+  }
+  window.paginate = paginate;
+
+  const ready = f => document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', f) : f();
+  ready(() => {
+    Object.entries(AUTO).forEach(([id, n]) => paginate(document.getElementById(id), n));
+    document.querySelectorAll('[data-paginate]').forEach(c => paginate(c, parseInt(c.dataset.paginate, 10) || 10));
+  });
 })();

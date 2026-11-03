@@ -136,9 +136,9 @@
 <script>
 // داده نمونه
 let patients = [
-  {id:1, code:"M-24001", first_name:"محمد", last_name:"رحیمی", phone:"0785123456", gender:"male", dob:"1365-04-12", last_visit:"۱۴۰۳/۰۲/۲۰", national_id:"", address:"", medical_notes:""},
-  {id:2, code:"M-24002", first_name:"فاطمه", last_name:"احمدی", phone:"0791234567", gender:"female", dob:"1370-11-12", last_visit:"۱۴۰۳/۰۲/۲۵", national_id:"", address:"", medical_notes:""},
-  {id:3, code:"M-24003", first_name:"احمد", last_name:"خان", phone:"0779988776", gender:"male", dob:"1368-02-02", last_visit:"۱۴۰۳/۰۲/۱۸", national_id:"", address:"", medical_notes:""},
+  {id:1, code:"M-24001", first_name:"محمد", last_name:"رحیمی", phone:"0785123456", gender:"male", dob:"1365-04-12", last_visit:AF.numeric(AF.daysAgo(8)), national_id:"", address:"", medical_notes:""},
+  {id:2, code:"M-24002", first_name:"فاطمه", last_name:"احمدی", phone:"0791234567", gender:"female", dob:"1370-11-12", last_visit:AF.numeric(AF.daysAgo(3)), national_id:"", address:"", medical_notes:""},
+  {id:3, code:"M-24003", first_name:"احمد", last_name:"خان", phone:"0779988776", gender:"male", dob:"1368-02-02", last_visit:AF.numeric(AF.daysAgo(10)), national_id:"", address:"", medical_notes:""},
 ];
 
 let editMode = false;

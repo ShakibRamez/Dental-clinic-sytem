@@ -127,9 +127,9 @@
 <script>
 // داده نمونه
 let appointments = [
-  {id:1, time:"09:00", date:"۱۴۰۳/۰۲/۲۸", patient:"محمد رحیمی", phone:"0785123456", doctor:"داکتر احمد رحمانی", type:"معاینه", status:"confirmed"},
-  {id:2, time:"10:30", date:"۱۴۰۳/۰۲/۲۸", patient:"فاطمه احمدی", phone:"0791234567", doctor:"داکتر فاطمه کریمی", type:"جرم‌گیری", status:"pending"},
-  {id:3, time:"13:00", date:"۱۴۰۳/۰۲/۲۸", patient:"احمد خان", phone:"0779988776", doctor:"داکتر احمد رحمانی", type:"عصب‌کشی", status:"confirmed"},
+  {id:1, time:"09:00", date:AF.numeric(AF.daysAgo(0)), patient:"محمد رحیمی", phone:"0785123456", doctor:"داکتر احمد رحمانی", type:"معاینه", status:"confirmed"},
+  {id:2, time:"10:30", date:AF.numeric(AF.daysAgo(0)), patient:"فاطمه احمدی", phone:"0791234567", doctor:"داکتر فاطمه کریمی", type:"جرم‌گیری", status:"pending"},
+  {id:3, time:"13:00", date:AF.numeric(AF.daysAgo(0)), patient:"احمد خان", phone:"0779988776", doctor:"داکتر احمد رحمانی", type:"عصب‌کشی", status:"confirmed"},
 ];
 
 let editMode = false;

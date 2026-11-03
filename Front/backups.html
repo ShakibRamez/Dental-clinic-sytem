@@ -30,7 +30,7 @@
           <p class="text-muted">بک‌آپ هر شب ساعت ۲۳:۴۵ به صورت خودکار گرفته می‌شود</p>
         </div>
         <div class="alert alert-info">
-          آخرین بک‌آپ: <strong>امروز - ۱۴۰۳/۰۲/۲۸ ساعت ۲۳:۴۵</strong><br>
+          آخرین بک‌آپ: <strong>امروز - <span data-af-ago="0"></span> ساعت ۲۳:۴۵</strong><br>
           حجم: ۲۳.۴ مگابایت
         </div>
         <button class="btn btn-success w-100 py-3" onclick="manualBackup()">
@@ -102,10 +102,10 @@
 <script>
 // داده نمونه بک‌آپ
 let backups = [
-  {id:1, date:"۱۴۰۳/۰۲/۲۸", time:"۲۳:۴۵", type:"خودکار", size:"۲۳.۴ MB", status:"موفق", filename:"backup_20250520.sql"},
-  {id:2, date:"۱۴۰۳/۰۲/۲۷", time:"۲۳:۴۵", type:"خودکار", size:"۲۲.۸ MB", status:"موفق", filename:"backup_20250519.sql"},
-  {id:3, date:"۱۴۰۳/۰۲/۲۶", time:"۲۳:۳۰", type:"دستی", size:"۲۴.۱ MB", status:"موفق", filename:"manual_backup_01.sql"},
-  {id:4, date:"۱۴۰۳/۰۲/۲۵", time:"۲۳:۴۵", type:"خودکار", size:"۲۱.۹ MB", status:"موفق", filename:"backup_20250518.sql"},
+  {id:1, date:AF.numeric(AF.daysAgo(0)), time:"۲۳:۴۵", type:"خودکار", size:"۲۳.۴ MB", status:"موفق", filename:"backup_20250520.sql"},
+  {id:2, date:AF.numeric(AF.daysAgo(1)), time:"۲۳:۴۵", type:"خودکار", size:"۲۲.۸ MB", status:"موفق", filename:"backup_20250519.sql"},
+  {id:3, date:AF.numeric(AF.daysAgo(2)), time:"۲۳:۳۰", type:"دستی", size:"۲۴.۱ MB", status:"موفق", filename:"manual_backup_01.sql"},
+  {id:4, date:AF.numeric(AF.daysAgo(3)), time:"۲۳:۴۵", type:"خودکار", size:"۲۱.۹ MB", status:"موفق", filename:"backup_20250518.sql"},
 ];
 
 function renderBackups() {
