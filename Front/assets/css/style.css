@@ -5,9 +5,9 @@
   --accent: #0d9488;
   --accent-strong: #0f766e;
   --accent-soft: rgba(13, 148, 136, .10);
-  --bg: #f7f9fb;
+  --bg: #e6eef1;
   --card: #ffffff;
-  --line: #e7ecf1;
+  --line: #d6e1e6;
   --ink: #0f172a;
   --muted: #6b7a8c;
   --radius: 14px;
@@ -23,7 +23,7 @@
   --accent: #2dd4bf;
   --accent-strong: #5eead4;
   --accent-soft: rgba(45, 212, 191, .12);
-  --bg: #0b1117;
+  --bg: #0a1116;
   --card: #111a22;
   --line: #1e2a35;
   --ink: #e6edf3;
@@ -38,7 +38,7 @@
 }
 
 /* ========== Base ========== */
-body { font-family: 'Vazirmatn', system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+body { font-family: 'Vazirmatn', system-ui, sans-serif; background: var(--bg) linear-gradient(180deg, rgba(13,148,136,.10), transparent 260px) no-repeat; color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
 .text-muted, .text-secondary { color: var(--muted) !important; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -142,3 +142,32 @@ hr { border-color: var(--line); opacity: 1; }
 @media (max-width: 575.98px) { body.p-4 { padding: 1rem !important; } .stat-number { font-size: 1.7rem; } }
 @media print { .sidebar, .btn, .toast-stack { display: none !important; } body { background: #fff; } .glass-card { box-shadow: none; } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* ========== Sidebar: deep teal (less white) ========== */
+.sidebar { background: linear-gradient(180deg, #0f3a3f 0%, #0a2a2e 100%); color: #d5e8e8; border: 0; }
+.sidebar .text-muted, .sidebar small { color: #8fb4b4 !important; }
+.sidebar .fw-bold, .sidebar .fw-semibold { color: #fff; }
+.sidebar .brand-mark { background: rgba(94, 234, 212, .14); color: #5eead4; }
+.sidebar .nav-link { color: #b6d0d0; }
+.sidebar .nav-link:hover { background: rgba(255,255,255,.07); color: #fff; }
+.sidebar .nav-link.active { background: rgba(94, 234, 212, .16); color: #5eead4; box-shadow: inset -3px 0 0 #5eead4; }
+.sidebar .group-label { color: #7fa6a6; }
+.sidebar .collapse-btn { color: #9cc0c0; } .sidebar .collapse-btn:hover { background: rgba(255,255,255,.08); color: #fff; }
+.sidebar .side-foot { border-color: rgba(255,255,255,.09) !important; }
+.sidebar .avatar { background: rgba(94,234,212,.14); color: #5eead4; }
+.sidebar .btn-outline-secondary { --bs-btn-color: #b6d0d0; --bs-btn-border-color: rgba(255,255,255,.14); --bs-btn-hover-bg: rgba(255,255,255,.09); --bs-btn-hover-color: #fff; --bs-btn-hover-border-color: rgba(255,255,255,.25); }
+[data-bs-theme="dark"] .sidebar { background: linear-gradient(180deg, #0c1c20, #081317); }
+
+/* ========== Animations ========== */
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(18px); } }
+@keyframes popIn { from { opacity: 0; transform: scale(.94); } }
+@keyframes shake { 0%,100% { transform: none; } 20%,60% { transform: translateX(-7px); } 40%,80% { transform: translateX(7px); } }
+.glass-card:not(.modal-content), .stat-card, .header-gradient:not(.modal-header), .header { animation: rise .55s cubic-bezier(.2,.7,.2,1) backwards; }
+.modal.show .modal-content { animation: popIn .25s ease; }
+tbody tr { animation: rise .4s ease backwards; }
+tbody tr:nth-child(1){animation-delay:.04s} tbody tr:nth-child(2){animation-delay:.08s} tbody tr:nth-child(3){animation-delay:.12s} tbody tr:nth-child(4){animation-delay:.16s} tbody tr:nth-child(5){animation-delay:.20s} tbody tr:nth-child(6){animation-delay:.24s} tbody tr:nth-child(7){animation-delay:.28s} tbody tr:nth-child(8){animation-delay:.32s} tbody tr:nth-child(n+9){animation-delay:.36s}
+.side-nav .nav-link { animation: slideIn .45s ease backwards; animation-delay: calc(var(--i, 0) * 35ms + 120ms); }
+.shake { animation: shake .45s; }
+.af-date-hint { font-size: .78rem; color: var(--accent-strong); }
+.btn-primary:hover, .btn-success:hover { box-shadow: 0 6px 16px rgba(13,148,136,.28); transform: translateY(-1px); }

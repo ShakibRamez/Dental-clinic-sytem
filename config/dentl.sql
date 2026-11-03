@@ -11,7 +11,7 @@ INSERT INTO users(username, password_hash, full_name, role, phone)
 VALUES('ahmad', 'asd', 'ahmad ahmadi', 'admin', '0791929394'),
 ('admin', '1234', 'ali ahmadi', 'doctor', '0794939291');
 
-
+-- /    DONE
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE,
@@ -23,6 +23,7 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- /    DONE
 CREATE TABLE patients (
     id SERIAL PRIMARY KEY,
     patient_code VARCHAR(20) UNIQUE,
@@ -40,6 +41,7 @@ CREATE TABLE patients (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- /    DONE
 CREATE TABLE doctors (
     id SERIAL PRIMARY KEY,
     specialization VARCHAR(50) NOT NULL,
@@ -61,6 +63,7 @@ CREATE TABLE treatments (
     is_active BOOLEAN DEFAULT true
 );
 
+-- /    DONE
 CREATE TABLE treatment_plans (
     id SERIAL PRIMARY KEY,
     patient_id INT REFERENCES patients(id) ON DELETE CASCADE,
@@ -81,6 +84,7 @@ CREATE TABLE treatment_plan_items (
     notes TEXT
 );
 
+-- /    DONE
 CREATE TABLE visits (
     id SERIAL PRIMARY KEY,
     patient_id INT REFERENCES patients(id) ON DELETE CASCADE,
@@ -150,6 +154,7 @@ CREATE TABLE appointment_slots (
     UNIQUE(doctor_id, slot_date, slot_start)
 );
 
+-- /    DONE
 CREATE TABLE appointments (
     id SERIAL PRIMARY KEY,
     patient_id INT REFERENCES patients(id) ON DELETE CASCADE,

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>معرفی سیستم</title>
+  <script>document.documentElement.setAttribute('data-bs-theme', localStorage.getItem('theme') || 'light')</script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <style>
+    .hero { position: relative; overflow: hidden; color: #fff; border-radius: 22px; padding: 38px 34px; background: linear-gradient(135deg, #0f766e, #0b4f55 60%, #0a3a45); animation: rise .6s both; }
+    .hero::before { content: ""; position: absolute; width: 380px; height: 380px; border-radius: 50%; border: 1px dashed rgba(255,255,255,.2); top: -150px; inset-inline-start: -110px; animation: spin 50s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hero > * { position: relative; }
+    .kpi { background: rgba(255,255,255,.12); border-radius: 14px; padding: 12px 16px; text-align: center; }
+    .kpi b { display: block; font-size: 1.6rem; }
+    .mod { transition: .2s; } .mod:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: var(--shadow-hover); }
+    .mod-ic { width: 44px; height: 44px; flex: none; border-radius: 13px; display: grid; place-items: center; font-size: 1.25rem; background: var(--accent-soft); color: var(--accent-strong); }
+    .flow { display: flex; gap: 0; flex-wrap: wrap; }
+    .flow .st { flex: 1 1 130px; text-align: center; padding: 14px 8px; position: relative; animation: rise .5s backwards; }
+    .flow .st:nth-child(1){animation-delay:.1s} .flow .st:nth-child(2){animation-delay:.2s} .flow .st:nth-child(3){animation-delay:.3s} .flow .st:nth-child(4){animation-delay:.4s} .flow .st:nth-child(5){animation-delay:.5s}
+    .flow .st .n { width: 46px; height: 46px; margin: 0 auto 8px; border-radius: 50%; display: grid; place-items: center; font-size: 1.2rem; color: #fff; background: var(--accent-strong); box-shadow: 0 0 0 6px var(--accent-soft); }
+    .flow .st:not(:last-child)::after { content: "\F12F"; font-family: bootstrap-icons; position: absolute; top: 26px; inset-inline-end: -10px; color: var(--muted); }
+    .months { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
+    .months div { padding: 8px; text-align: center; border-radius: 12px; border: 1px solid var(--line); font-size: .9rem; }
+    .months div small { display: block; color: var(--muted); font-size: .7rem; }
+    .months div.now { background: var(--accent-strong); color: #fff; border-color: transparent; transform: scale(1.06); }
+    .months div.now small { color: rgba(255,255,255,.8); }
+    .tl { border-inline-start: 2px solid var(--line); padding-inline-start: 18px; }
+    .tl li { position: relative; margin-bottom: 10px; list-style: none; }
+    .tl li::before { content: ""; position: absolute; inset-inline-start: -25px; top: 8px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+  </style>
+</head>
+<body class="p-3 p-md-4">
+  <section class="hero mb-4">
+    <span class="badge bg-light text-dark mb-2">نسخهٔ ۱.۲ • Dentis</span>
+    <h2 class="fw-bold mb-2">سیستم مدیریت کلینیک دندان‌پزشکی</h2>
+    <p class="mb-4 opacity-75" style="max-width:640px">یک سیستم یکپارچه برای کار روزانهٔ کلینیک؛ از پذیرش مریض و نوبت‌دهی تا ویزیت، نسخه، پلان درمان، فاکتور و انبار، همه در یک‌جا، سریع و ساده، مطابق تقویم و پول افغانستان.</p>
+    <div class="row g-2">
+      <div class="col-6 col-md-3"><div class="kpi"><b>۱۲</b>بخش کاری</div></div>
+      <div class="col-6 col-md-3"><div class="kpi"><b>۲</b>تم روشن و تیره</div></div>
+      <div class="col-6 col-md-3"><div class="kpi"><b>۱۰۰٪</b>راست‌به‌چپ و ریسپانسیو</div></div>
+      <div class="col-6 col-md-3"><div class="kpi"><b>؋</b>افغانی و تقویم شمسی</div></div>
+    </div>
+  </section>
+
+  <h5 class="fw-bold mb-3">بخش‌های سیستم</h5>
+  <div class="row g-3 mb-4"><div class="col-sm-6 col-xl-4"><a class="mod glass-card p-3 d-flex gap-3 h-100 text-decoration-none" href="index.html#dashboard" target="_top"><div class="mod-ic"><i class="bi bi-speedometer2"></i></div><div><div class="fw-bold text-body">داشبورد</div><div class="small text-muted">نمای کلی امروز: نوبت‌ها، درآمد، درصد اشغال و نمودار ۳۰ روز اخیر.</div></div></a></div><div class="col-sm-6 col-xl-4"><a class="mod glass-card p-3 d-flex gap-3 h-100 text-decoration-none" href="index.html#patients2" target="_top"><div class="mod-ic"><i class="bi bi-people"></i></div><div><div class="fw-bold text-body">مریضان</div><div class="small text-muted">ثبت پرونده، جست‌وجوی سریع، ویرایش و مشاهدهٔ سابقهٔ کامل درمان.</div></div></a></div><div class="col-sm-6 col-xl-4"><a class="mod glass-card p-3 d-flex gap-3 h-100 text-decoration-none" href="index.html#doctors2" target="_top"><div class="mod-ic"><i class="bi bi-person-badge"></i></div><div><div class="fw-bold text-body">داکتران</div><div class="small text-muted">مشخصات داکتران، تخصص و ساعات کاری هر داکتر.</div></div></a></div><div class="col-sm-6 col-xl-4"><a class="mod glass-card p-3 d-flex gap-3 h-100 text-decoration-none" href="index.html#appointments" target="_top"><div class="mod-ic"><i class="bi bi-calendar-check"></i></div><div><div class="fw-bold text-body">نوبت‌دهی</div><div class="small text-muted">رزرو نوبت با تقویم افغانی و جلوگیری از هم‌پوشانی زمان‌ها.</div></div></a></div><div class="col-sm-6 col-xl-4"><a class="mod glass-card p-3 d-flex gap-3 h-100 text-decoration-none" href="index.html#visits" target="_top"><div class="mod-ic"><i class="bi bi-clipboard2-pulse"></i></div><div><div class="fw-bold text-body">ویزیت‌ها</div><div class="small text-muted">ثبت معاینه، تشخیص و اقدامات هر ویزیت.</div></div></a></div><div class="col-sm-6 col-xl-4"><a class="mod glass-card p-3 d-flex gap-3 h-100 text-decoration-none" href="index.html#prescriptions" target="_top"><div class="mod-ic"><i class="bi bi-prescription2"></i></div><div><div class="fw-bold text-body">نسخه‌نویسی</div><div class="small text-muted">نوشتن نسخه از فهرست دوا و چاپ آن با یک کلیک.</div></div></a></div><div class="col-sm-6 col-xl-4"><a class="mod glass-card p-3 d-flex gap-3 h-100 text-decoration-none" href="index.html#treatment-plans" target="_top"><div class="mod-ic"><i class="bi bi-card-checklist"></i></div><div><div class="fw-bold text-body">پلان درمان</div><div class="small text-muted">برنامهٔ مرحله‌به‌مرحلهٔ درمان با برآورد هزینه و پرداخت‌شده.</div></div></a></div><div class="col-sm-6 col-xl-4"><a class="mod glass-card p-3 d-flex gap-3 h-100 text-decoration-none" href="index.html#invoices" target="_top"><div class="mod-ic"><i class="bi bi-receipt"></i></div><div><div class="fw-bold text-body">فاکتورها</div><div class="small text-muted">صدور فاکتور، تخفیف، پرداخت نقدی و وضعیت پرداخت (؋).</div></div></a></div><div class="col-sm-6 col-xl-4"><a class="mod glass-card p-3 d-flex gap-3 h-100 text-decoration-none" href="index.html#inventory" target="_top"><div class="mod-ic"><i class="bi bi-box-seam"></i></div><div><div class="fw-bold text-body">انبار</div><div class="small text-muted">موجودی مواد و تجهیزات، هشدار کمبود و ارزش کل انبار.</div></div></a></div><div class="col-sm-6 col-xl-4"><a class="mod glass-card p-3 d-flex gap-3 h-100 text-decoration-none" href="index.html#reports" target="_top"><div class="mod-ic"><i class="bi bi-bar-chart-line"></i></div><div><div class="fw-bold text-body">گزارشات</div><div class="small text-muted">گزارش مالی و عملکرد روزانه، ماهانه و سالانه.</div></div></a></div><div class="col-sm-6 col-xl-4"><a class="mod glass-card p-3 d-flex gap-3 h-100 text-decoration-none" href="index.html#backups" target="_top"><div class="mod-ic"><i class="bi bi-cloud-arrow-up"></i></div><div><div class="fw-bold text-body">بک‌آپ</div><div class="small text-muted">پشتیبان‌گیری خودکار شبانه و بازیابی اطلاعات.</div></div></a></div><div class="col-sm-6 col-xl-4"><a class="mod glass-card p-3 d-flex gap-3 h-100 text-decoration-none" href="index.html#users" target="_top"><div class="mod-ic"><i class="bi bi-person-gear"></i></div><div><div class="fw-bold text-body">کاربران و نقش‌ها</div><div class="small text-muted">مدیریت حساب‌ها؛ هر نقش فقط به بخش‌های خودش دسترسی دارد.</div></div></a></div></div>
+
+  <div class="glass-card p-4 mb-4">
+    <h5 class="fw-bold mb-2">مسیر کار یک مریض</h5>
+    <p class="text-muted small mb-3">هر مریض در سیستم این مسیر را طی می‌کند و همهٔ مراحل به پروندهٔ او وصل می‌شود.</p>
+    <div class="flow">
+      <div class="st"><div class="n"><i class="bi bi-person-plus"></i></div><b>پذیرش</b><div class="small text-muted">ثبت مریض</div></div>
+      <div class="st"><div class="n"><i class="bi bi-calendar-check"></i></div><b>نوبت</b><div class="small text-muted">رزرو زمان</div></div>
+      <div class="st"><div class="n"><i class="bi bi-clipboard2-pulse"></i></div><b>ویزیت</b><div class="small text-muted">معاینه و تشخیص</div></div>
+      <div class="st"><div class="n"><i class="bi bi-prescription2"></i></div><b>درمان</b><div class="small text-muted">نسخه و پلان</div></div>
+      <div class="st"><div class="n"><i class="bi bi-receipt"></i></div><b>حساب</b><div class="small text-muted">فاکتور و پرداخت</div></div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-lg-7"><div class="glass-card p-4 h-100">
+      <h5 class="fw-bold mb-1">تقویم افغانی</h5>
+      <p class="text-muted small mb-3">همهٔ تاریخ‌ها هجری شمسی با نام ماه‌های افغانی است، هفته از شنبه شروع می‌شود و جمعه تعطیل است. امروز: <b id="today"></b></p>
+      <div class="months" id="months"></div>
+    </div></div>
+    <div class="col-lg-5"><div class="glass-card p-4 h-100">
+      <h5 class="fw-bold mb-3">استانداردهای محلی</h5>
+      <ul class="list-unstyled mb-0 small">
+        <li class="mb-2"><i class="bi bi-currency-exchange text-success"></i> واحد پول: افغانی (؋)</li>
+        <li class="mb-2"><i class="bi bi-clock text-primary"></i> وقت کابل (UTC+4:30)</li>
+        <li class="mb-2"><i class="bi bi-123 text-warning"></i> ارقام فارسی و جداکنندهٔ هزارگان</li>
+        <li class="mb-2"><i class="bi bi-telephone text-info"></i> شماره‌ها با کد افغانستان (۰۷x…)</li>
+        <li><i class="bi bi-translate text-secondary"></i> زبان رابط: دری</li>
+      </ul>
+    </div></div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-lg-6"><div class="glass-card p-4 h-100">
+      <h5 class="fw-bold mb-3">امنیت و پایداری</h5>
+      <ul class="small mb-0 text-muted">
+        <li>ورود با حساب کاربری و نقش‌های جداگانه</li>
+        <li>خروج خودکار و بازگشت به ورود هنگام پایان نشست (۴۰۱)</li>
+        <li>پشتیبان‌گیری شبانه، با امکان بازیابی</li>
+        <li>صفحه‌های خطای واضح (۴۰۰ تا ۵۰۳) با راهنمایی برای کاربر</li>
+        <li>پاک‌سازی ورودی‌ها برای جلوگیری از حملهٔ XSS</li>
+      </ul>
+    </div></div>
+    <div class="col-lg-6"><div class="glass-card p-4 h-100">
+      <h5 class="fw-bold mb-3">تکنولوژی</h5>
+      <div class="d-flex flex-wrap gap-2">
+        <span class="badge bg-primary">HTML5 / CSS3</span><span class="badge bg-primary">Bootstrap 5 RTL</span><span class="badge bg-primary">JavaScript</span>
+        <span class="badge bg-primary">Chart.js</span><span class="badge bg-primary">Node.js / Express</span><span class="badge bg-primary">REST API</span>
+      </div>
+      <p class="small text-muted mt-3 mb-0">فرانت‌اند بدون وابستگی سنگین ساخته شده و مستقیم از همان سرور Node سرو می‌شود.</p>
+    </div></div>
+  </div>
+
+  <div class="glass-card p-4">
+    <h5 class="fw-bold mb-3">تازه‌ها در نسخهٔ ۱.۲</h5>
+    <ul class="tl mb-0 small">
+      <li>طراحی تازه و مینیمال با تم روشن و تیره</li>
+      <li>سایدبار گروه‌بندی‌شده، قابل جمع‌شدن و سازگار با موبایل</li>
+      <li>تقویم شمسی افغانی در همهٔ صفحات و زیر ورودی‌های تاریخ</li>
+      <li>صفحهٔ ورود و بارگذاری تازه با انیمیشن</li>
+      <li>صفحه‌های خطا برای همهٔ حالت‌ها و پیام‌های اعلان به‌جای پنجرهٔ مزاحم</li>
+    </ul>
+  </div>
+
+<script src="assets/js/app.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const cur = AF.parts().m, ord = ['اول','دوم','سوم','چهارم','پنجم','ششم','هفتم','هشتم','نهم','دهم','یازدهم','دوازدهم'];
+  document.getElementById('today').textContent = AF.long();
+  document.getElementById('months').innerHTML = AF.MONTHS.map((n, i) => `<div class="${i + 1 === cur ? 'now' : ''}">${n}<small>ماه ${ord[i]}</small></div>`).join('');
+</script>
+</body>
+</html>

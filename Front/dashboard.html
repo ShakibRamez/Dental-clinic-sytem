@@ -202,9 +202,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 // تاریخ امروز
-document.getElementById('currentDate').textContent = new Intl.DateTimeFormat('fa-IR', {
-  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-}).format(new Date());
+document.getElementById('currentDate').textContent = AF.long() + ' • ' + AF.time();
 
 // نمودار (کد قبلی)
 const days = Array.from({ length: 30 }, (_, i) => i + 1);
@@ -217,7 +215,7 @@ function drawChart() {
   chart?.destroy();
   chart = new Chart(document.getElementById('mainChart'), {
     data: {
-      labels: days.map(n => n.toLocaleString('fa-IR')),
+      labels: days.map(n => n.toLocaleString('fa-AF')),
       datasets: [
         { type: 'line', label: 'درآمد (؋)', data: rev, yAxisID: 'y', borderColor: '#0d9488', backgroundColor: 'rgba(13,148,136,.10)', fill: true, tension: .35, pointRadius: 0 },
         { type: 'bar', label: 'نوبت', data: apps, yAxisID: 'y1', backgroundColor: 'rgba(100,116,139,.25)', borderRadius: 6 }
@@ -229,7 +227,7 @@ function drawChart() {
       plugins: { legend: { labels: { color: txt, font: { family: 'Vazirmatn' } } } },
       scales: {
         x: { ticks: { color: txt }, grid: { display: false } },
-        y: { position: 'right', ticks: { color: txt, callback: v => v.toLocaleString('fa-IR') }, grid: { color: grid } },
+        y: { position: 'right', ticks: { color: txt, callback: v => v.toLocaleString('fa-AF') }, grid: { color: grid } },
         y1: { position: 'left', ticks: { color: txt }, grid: { display: false } }
       }
     }

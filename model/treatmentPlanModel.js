@@ -7,14 +7,15 @@ exports.getTreatments = async() => {
 
 exports.getTreatmentById = async(id) => {
     const treatment = db.query("SELECT * FROM treatment_plans WHERE id = $1", [id])
+    return treatment;
 }
 
 exports.addTreatment = async(plan_id, treatment_id, quantity, price, discount, notes) => {
-    await db.query("INSERT INTO treatment_plans(plan_id, treatment_id, quantity, price, discount, notes) VALUES ($1, $2, $3, $4, $5, $6)"), [plan_id, treatment_id, quantity, price, discount, notes]
+    await db.query("INSERT INTO treatment_plans(plan_id, treatment_id, quantity, price, discount, notes) VALUES ($1, $2, $3, $4, $5, $6)", [plan_id, treatment_id, quantity, price, discount, notes])
 }
 
 exports.updateTreatment = async(plan_id, treatment_id, quantity, price, discount, notes) => {
-    await db.query("UPDATE treatment_plans SET plan_id, treatment_id, quantity, price, discount, notes) VALUES ", [plan_id, treatment_id, quantity, price, discount, notes])
+    await db.query("UPDATE treatment_plans SET plan_id = $1, treatment_id = $2, quantity = $3, price = $4, discount = $5, notes = $6 WHERE id = $7", [plan_id, treatment_id, quantity, price, discount, notes, id])
 }
 
 exports.deleteTreatment = async(id) => {

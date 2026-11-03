@@ -100,7 +100,7 @@
               </div>
               <div class="col-md-6">
                 <label class="form-label fw-bold">شماره فاکتور</label>
-                <input type="text" class="form-control" id="invoice_number" value="F-1403001" readonly>
+                <input type="text" class="form-control" id="invoice_number" value="F-0001" readonly>
               </div>
 
               <div class="col-md-4">
@@ -158,10 +158,10 @@
 <script>
 // داده نمونه
 let invoices = [
-  {id:1, number:"F-1403001", patient:"محمد رحیمی", total:125000, discount:15000, final:110000, status:"paid", date:"۱۴۰۳/۰۲/۲۸"},
-  {id:2, number:"F-1403002", patient:"فاطمه احمدی", total:280000, discount:0, final:280000, status:"unpaid", date:"۱۴۰۳/۰۲/۲۷"},
-  {id:3, number:"F-1403003", patient:"احمد خان", total:85000, discount:5000, final:80000, status:"paid", date:"۱۴۰۳/۰۲/۲۶"},
-  {id:4, number:"F-1403004", patient:"سارا محمدی", total:150000, discount:10000, final:140000, status:"unpaid", date:"۱۴۰۳/۰۲/۲۵"},
+  {id:1, number:"F-0001", patient:"محمد رحیمی", total:125000, discount:15000, final:110000, status:"paid", date:AF.numeric(AF.daysAgo(0))},
+  {id:2, number:"F-0002", patient:"فاطمه احمدی", total:280000, discount:0, final:280000, status:"unpaid", date:AF.numeric(AF.daysAgo(1))},
+  {id:3, number:"F-0003", patient:"احمد خان", total:85000, discount:5000, final:80000, status:"paid", date:AF.numeric(AF.daysAgo(2))},
+  {id:4, number:"F-0004", patient:"سارا محمدی", total:150000, discount:10000, final:140000, status:"unpaid", date:AF.numeric(AF.daysAgo(3))},
 ];
 
 function renderInvoices(data = invoices) {
@@ -170,9 +170,9 @@ function renderInvoices(data = invoices) {
     <tr class="${inv.status === 'paid' ? 'paid-row' : 'unpaid-row'}">
       <td><strong>${inv.number}</strong></td>
       <td>${inv.patient}</td>
-      <td>${inv.total.toLocaleString('fa-IR')} ؋</td>
-      <td>${inv.discount.toLocaleString('fa-IR')} ؋</td>
-      <td><strong>${inv.final.toLocaleString('fa-IR')} ؋</strong></td>
+      <td>${inv.total.toLocaleString('fa-AF')} ؋</td>
+      <td>${inv.discount.toLocaleString('fa-AF')} ؋</td>
+      <td><strong>${inv.final.toLocaleString('fa-AF')} ؋</strong></td>
       <td>
         <span class="badge ${inv.status === 'paid' ? 'bg-success' : 'bg-warning text-dark'}">
           ${inv.status === 'paid' ? '✓ پرداخت شده' : '⏳ پرداخت نشده'}
@@ -199,7 +199,7 @@ function updateStats() {
   const totalPaid = invoices
     .filter(i => i.status === 'paid')
     .reduce((sum, i) => sum + i.final, 0);
-  document.getElementById('totalPaid').textContent = totalPaid.toLocaleString('fa-IR') + ' ؋';
+  document.getElementById('totalPaid').textContent = totalPaid.toLocaleString('fa-AF') + ' ؋';
 }
 
 function filterInvoices(type) {
@@ -272,15 +272,15 @@ function viewInvoice(id) {
       <tbody>
         <tr>
           <td>مبلغ کل خدمات</td>
-          <td>${inv.total.toLocaleString('fa-IR')} ؋</td>
+          <td>${inv.total.toLocaleString('fa-AF')} ؋</td>
         </tr>
         <tr>
           <td>تخفیف</td>
-          <td>${inv.discount.toLocaleString('fa-IR')} ؋</td>
+          <td>${inv.discount.toLocaleString('fa-AF')} ؋</td>
         </tr>
         <tr class="table-success">
           <td><strong>مبلغ نهایی</strong></td>
-          <td><strong>${inv.final.toLocaleString('fa-IR')} ؋</strong></td>
+          <td><strong>${inv.final.toLocaleString('fa-AF')} ؋</strong></td>
         </tr>
       </tbody>
     </table>
