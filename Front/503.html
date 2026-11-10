@@ -18,7 +18,7 @@
     <h3 class="err-title">سیستم در حال تعمیر است</h3>
     <p class="err-text">سرویس موقتاً در دسترس نیست (به‌روزرسانی یا نگهداری). اطلاعات شما سالم است و به‌زودی برمی‌گردیم.</p>
 <p class="small text-muted"><span class="pulse-dot"></span><span id="st">بررسی خودکار وضعیت سرور هر ۱۵ ثانیه…</span> <b id="sec"></b></p>
-    <div class="err-actions"><button class="btn btn-primary" onclick="check()"><i class="bi bi-arrow-clockwise"></i> بررسی دوباره</button><a class="btn btn-outline-secondary" href="index.html"><i class="bi bi-house"></i> صفحهٔ اصلی</a></div>
+    <div class="err-actions"><button class="btn btn-primary" onclick="check()"><i class="bi bi-arrow-clockwise"></i> بررسی دوباره</button><a class="btn btn-outline-secondary" href="/index"><i class="bi bi-house"></i> صفحهٔ اصلی</a></div>
     <div class="err-meta">
       <span><i class="bi bi-calendar3"></i> <span id="when"></span></span>
       <span><i class="bi bi-link-45deg"></i> <code id="path"></code></span>
@@ -33,7 +33,7 @@
   let s = 15;
   async function check() {
     $('st').textContent = 'در حال بررسی…';
-    try { const r = await fetch('index.html', { cache: 'no-store' }); if (r.ok) { $('st').textContent = 'سرور برگشت! در حال انتقال…'; return location.replace('index.html'); } } catch (e) {}
+    try { const r = await fetch('/index', { cache: 'no-store' }); if (r.ok) { $('st').textContent = 'سرور برگشت! در حال انتقال…'; return location.replace('/index'); } } catch (e) {}
     $('st').textContent = 'هنوز در دسترس نیست. بررسی بعدی تا'; s = 15;
   }
   setInterval(() => { $('sec').textContent = AF.faDigits(s) + ' ثانیه'; if (--s < 0) check(); }, 1000);

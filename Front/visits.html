@@ -189,18 +189,30 @@ function openNewVisit() {
 }
 
 function editVisit(id) {
-  const visit = visits.find(v => v.id === id);
-  if (!visit) return;
-
+  const v = visits.find(x => x.id === id);
+  if (!v) return;
   editMode = true;
   document.getElementById('modalTitle').textContent = 'ویرایش ویزیت';
-  document.getElementById('edit_id').value = visit.id;
-  
+  document.getElementById('edit_id').value = v.id;
+  F.setSelByText('patient_id', v.patient);
+  F.setSelByText('doctor_id', v.doctor);
+  document.getElementById('visit_date').value = v.iso || F.todayISO();
+  document.getElementById('visit_time').value = v.timeRaw || '';
+  document.getElementById('reason').value = v.reason || '';
+  document.getElementById('diagnosis').value = v.diagnosis || '';
+  document.getElementById('notes').value = v.notes || '';
+  document.getElementById('status').value = v.status;
   new bootstrap.Modal(document.getElementById('visitModal')).show();
 }
 
 function saveVisit() {
-  alert(editMode ? "✅ ویزیت با موفقیت ویرایش شد!" : "✅ ویزیت جدید با موفقیت ثبت شد!");
+  const iso = F.val('visit_date'), time = F.val('visit_time');
+  if (!F.val('patient_id') || !F.val('doctor_id') || !iso) return alert('⚠️ مریض، داکتر و تاریخ را وارد کنید');
+  const rec = { patient: F.name(F.selText('patient_id')), doctor: F.selText('doctor_id'), iso, date: AF.numeric(AF.fromISO(iso)), timeRaw: time,
+    time: time ? AF.faDigits(time) : '—', reason: F.val('reason'), diagnosis: F.val('diagnosis'), notes: F.val('notes'), status: F.val('status') };
+  const id = Number(F.val('edit_id'));
+  if (editMode && id) Object.assign(visits.find(v => v.id === id), rec); else visits.push({ id: F.nextId(visits), ...rec });
+  alert(editMode ? '✅ ویزیت با موفقیت ویرایش شد!' : '✅ ویزیت جدید با موفقیت ثبت شد!');
   bootstrap.Modal.getInstance(document.getElementById('visitModal')).hide();
   renderVisits();
 }

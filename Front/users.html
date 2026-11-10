@@ -41,12 +41,12 @@
     <div class="modal-dialog">
       <div class="modal-content glass-card">
          <div class="modal-header header-gradient">
+          <h5 class="modal-title fw-bold">ثبت کاربر جدید</h5>
           <button type="button" 
             class="btn-close btn-close-white" 
             data-bs-dismiss="modal" 
             aria-label="Close">
            </button>
-            <h5 class="modal-title fw-bold">ثبت کاربر جدید</h5>
         </div>
         <div class="modal-body">
           <form method="post" id="userForm">
@@ -103,81 +103,37 @@ const userBody = document.getElementById('usersBody').addEventListener("click", 
   e.preventDefault();
 })
 
-async function deleteUser(id) {
-  const response = await fetch(`/api/users/${id}`, {
-    method: "DELETE"
-  })
+async function loadUsers() {
+  const res = await fetch('/api/users', { credentials: 'same-origin' });
+  const txt = await res.text(); let data;
+  try { data = JSON.parse(txt); } catch { throw new Error('پاسخ سرور JSON نیست'); }
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return Array.isArray(data) ? data : (data.users || []);
 }
-
-
 async function renderUsers() {
-  let users = await loadUsers();
-  document.getElementById('usersBody').innerHTML = users.map(u => `
-    <tr>
-      <td>${u.id}</td>
-      <td>${u.full_name}</td>
-      <td class="savedUsername">${u.username}</td>
-      <td>${u.phone}</td>
-      <td><span class="badge bg-primary">${u.role}</span></td>
-      <td><span class="badge bg-success">${u.is_active? "فعال": "غیرفعال"}</span></td>
-      <td><button class="btn btn-sm btn-outline-danger">حذف</button></td>
-    </tr>
-  `).join('');
+  const body = document.getElementById('usersBody'); let users;
+  try { users = await loadUsers(); }
+  catch (e) { body.innerHTML = '<tr><td colspan="7" class="text-center text-danger py-4">دریافت فهرست کاربران ممکن نشد. اتصال سرور را بررسی کنید.</td></tr>'; return; }
+  if (!users.length) { body.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4">هنوز کاربری ثبت نشده است</td></tr>'; return; }
+  body.innerHTML = users.map(u => `<tr><td>${esc(u.id)}</td><td>${esc(u.full_name)}</td><td class="savedUsername">${esc(u.username)}</td><td dir="ltr">${esc(u.phone)}</td>
+    <td><span class="badge bg-primary">${esc(u.role)}</span></td><td><span class="badge ${u.is_active ? 'bg-success' : 'bg-secondary'}">${u.is_active ? 'فعال' : 'غیرفعال'}</span></td>
+    <td><button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${Number(u.id)})"><i class="bi bi-trash"></i> حذف</button></td></tr>`).join('');
 }
-
-async function saveUser() {
-  const full_name = (document.getElementById('full_name')).value;
-  const username = (document.getElementById('username')).value;
-  const password_hash = (document.getElementById('password')).value;
-  const phone = (document.getElementById('phone')).value;
-  const role = (document.getElementById('role')).value;
-  const userNames = document.querySelectorAll('.savedUsername');
-  let b = true;
-  userNames.forEach(u => {
-    if(u.textContent === username){
-      alert("❌ نام کاربری تکراری است!");
-      b = false;
-    }
-  })
-  if(!RegExp("^[a-zA-Z_\s]$").test(full_name)){
-    alert("❌ نام کامل باید با حروف باشد!");
-    b = false;
-  }
-  if(!b) return;
-  
-  const response = await fetch('/api/users', {
-    method: 'POST',
-    headers: {"Content-Type": "application/json"},
-    credentials:"same-origin",
-    body: JSON.stringify({
-      username ,
-      password_hash ,
-      full_name ,
-      role ,
-      phone
-    })
-  })
-  
-  alert("✅ کاربر جدید با موفقیت ثبت شد!");
-  
-  bootstrap.Modal.getInstance(document.getElementById('newUserModal')).hide();
+async function deleteUser(id) {
+  if (!confirm('این کاربر حذف شود؟')) return;
+  try { const r = await fetch('/api/users/' + id, { method: 'DELETE', credentials: 'same-origin' }); if (!r.ok) throw 0; alert('✅ کاربر حذف شد'); } catch { alert('❌ حذف انجام نشد'); }
   renderUsers();
 }
-
-async function loadUsers(){
-  try{
-    const response = await fetch("/api/users");
-
-    if(!response.ok){
-      throw new Error("Failed To Fetch Users!")
-    }
-
-    const users = await response.json();
-
-    return users;
-  }catch(error){
-    console.error(error);
-  }
+async function saveUser() {
+  const val = id => document.getElementById(id).value.trim();
+  const user = { full_name: val('full_name'), username: val('username'), password_hash: document.getElementById('password').value, phone: val('phone'), role: val('role') };
+  if (!user.full_name || !user.username || !user.password_hash) return alert('⚠️ نام، نام کاربری و رمز عبور الزامی است');
+  if ([...document.querySelectorAll('.savedUsername')].some(c => c.textContent === user.username)) return alert('⚠️ این نام کاربری قبلاً ثبت شده است');
+  try { const r = await fetch('/api/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify(user) }); if (!r.ok) throw 0; }
+  catch { return alert('❌ ثبت کاربر انجام نشد'); }
+  alert('✅ کاربر جدید با موفقیت ثبت شد!');
+  bootstrap.Modal.getInstance(document.getElementById('newUserModal')).hide();
+  renderUsers();
 }
 
 renderUsers();

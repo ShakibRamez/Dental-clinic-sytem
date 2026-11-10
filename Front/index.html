@@ -135,6 +135,10 @@
     if (cur) $('#pageTitle').textContent = cur.textContent.trim();
   });
 
+  // #hash → صفحه (کارت‌های صفحهٔ معرفی، لینک مستقیم، دکمهٔ برگشت)
+  const fromHash = () => links.find(a => a.getAttribute('href') === location.hash.slice(1) + '.html')?.getAttribute('href');
+  window.addEventListener('hashchange', () => { const h = fromHash(); if (h && !frame.src.endsWith('/' + h)) { frame.src = h; sessionStorage.setItem('lastPage', h); toggleMenu(false); } });
+
   // restore deep link (#patients2) or last page
   const hash = location.hash.slice(1);
   const start = links.find(a => a.getAttribute('href') === hash + '.html')?.getAttribute('href') || sessionStorage.getItem('lastPage');

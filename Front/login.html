@@ -103,7 +103,7 @@
 <script src="./assets/js/auth.js"></script>
 <script>
   const $ = id => document.getElementById(id);
-  if (sessionStorage.getItem('isLoggedIn') === 'true') location.replace('index.html');
+  if (sessionStorage.getItem('isLoggedIn') === 'true') location.replace('/index');
 
   $('greet').textContent = AF.greeting() + '، امروز ' + AF.long();
   const tick = () => $('clock').textContent = AF.long() + ' • ' + AF.time() + ' (وقت کابل)';
@@ -127,7 +127,7 @@
 
     busy(true);
     const r = await login(username, password);
-    if (r.ok) { $('btnTxt').textContent = 'ورود موفق ✓'; return setTimeout(() => (location.href = 'loading.html'), 350); }
+    if (r.ok) { $('btnTxt').textContent = 'ورود موفق ✓'; return setTimeout(() => (location.href = '/loading'), 350); }
     busy(false); fail(r.message); $('password').select();
   });
   function busy(on) { $('submitBtn').disabled = on; $('spin').classList.toggle('d-none', !on); $('btnTxt').textContent = on ? 'در حال بررسی…' : 'ورود به سیستم'; }

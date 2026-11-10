@@ -183,18 +183,29 @@ function openNewPlan() {
 }
 
 function editPlan(id) {
-  const plan = treatmentPlans.find(p => p.id === id);
-  if (!plan) return;
-
+  const p = treatmentPlans.find(x => x.id === id);
+  if (!p) return;
   editMode = true;
   document.getElementById('modalTitle').textContent = 'ویرایش پلن درمان';
-  document.getElementById('edit_id').value = plan.id;
-  
+  document.getElementById('edit_id').value = p.id;
+  F.setSelByText('patient_id', p.patient);
+  document.getElementById('plan_title').value = p.title;
+  document.getElementById('description').value = p.description || '';
+  document.getElementById('total_amount').value = (p.total || 0) + (p.discount || 0);
+  document.getElementById('discount').value = p.discount || 0;
+  document.getElementById('status').value = p.status;
   new bootstrap.Modal(document.getElementById('planModal')).show();
 }
 
 function savePlan() {
-  alert(editMode ? "✅ پلن درمان با موفقیت ویرایش شد!" : "✅ پلن درمان جدید با موفقیت ثبت شد!");
+  const total = Number(F.val('total_amount')) || 0, discount = Number(F.val('discount')) || 0, title = F.val('plan_title').trim();
+  if (!F.val('patient_id') || !title || total <= 0) return alert('⚠️ مریض، عنوان و مبلغ پلن را وارد کنید');
+  const label = F.selText('patient_id');
+  const rec = { patient: F.name(label), code: F.code(label), title, description: F.val('description'), total: total - discount, discount, status: F.val('status') };
+  const id = Number(F.val('edit_id'));
+  if (editMode && id) Object.assign(treatmentPlans.find(p => p.id === id), rec);
+  else treatmentPlans.push({ id: F.nextId(treatmentPlans), paid: 0, start_date: AF.numeric(), ...rec });
+  alert(editMode ? '✅ پلن درمان با موفقیت ویرایش شد!' : '✅ پلن درمان جدید با موفقیت ثبت شد!');
   bootstrap.Modal.getInstance(document.getElementById('planModal')).hide();
   renderPlans();
 }

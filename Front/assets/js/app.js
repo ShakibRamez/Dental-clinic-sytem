@@ -31,8 +31,11 @@
     stack().appendChild(el);
     setTimeout(() => { el.classList.add('hide'); setTimeout(() => el.remove(), 300); }, ms);
   };
+  const JSON_ERR = /Unexpected token|is not valid JSON|JSON\.parse|Unexpected end of JSON/i;
+  const friendly = s => JSON_ERR.test(s) ? 'سرور به‌جای JSON یک صفحهٔ HTML برگرداند؛ مسیر API در سرور وجود ندارد یا نادرست است' : s;
+  window.addEventListener('unhandledrejection', e => { if (JSON_ERR.test(String(e.reason && e.reason.message || e.reason))) { e.preventDefault(); window.toast(friendly(String(e.reason.message)), 'danger', 6000); } });
   window.alert = function (text) {
-    const s = String(text);
+    const s = friendly(String(text));
     const type = s.startsWith('✅') ? 'success' : s.startsWith('❌') ? 'danger' : s.startsWith('⚠') ? 'warning' : 'info';
     window.toast(s.replace(/^[✅❌⚠️\s]+/u, '').split('\n')[0], type);
   };
@@ -50,7 +53,9 @@
     });
     if (res.status === 401) { sessionStorage.clear(); (window.top || window).location.replace('login.html'); throw new Error('unauthorized'); }
     if (!res.ok) throw new Error((await res.text()) || res.statusText);
-    return res.status === 204 ? null : res.json();
+    if (res.status === 204) return null;
+    const txt = await res.text();
+    try { return JSON.parse(txt); } catch { throw new Error('پاسخ سرور JSON نیست (' + url + ') — این مسیر در سرور وجود ندارد'); }
   };
 })();
 
@@ -144,7 +149,7 @@
     const sizes = def <= 6 ? [6, 12, 24, 0] : [5, 10, 20, 50, 0];
     let size = parseInt(localStorage.getItem(key), 10);
     if (isNaN(size) || !sizes.includes(size)) size = def;
-    let page = 1, prevCount = -1, queued = false;
+    let page = 1, prevCount = -1, queued = false, prevFirst = '', prevLast = '';
 
     const bar = document.createElement('div');
     bar.className = 'pager d-flex flex-wrap align-items-center justify-content-between gap-3 mt-3';
@@ -169,10 +174,12 @@
 
     function render(animate) {
       queued = false;
-      const items = [...container.children];
+      const items = [...container.children].filter(el => !(el.tagName === 'TR' && el.children.length === 1 && el.firstElementChild.hasAttribute('colspan')));   // empty/error rows are not counted
       const total = items.length;
+      const first = total ? items[0].textContent : '', last = total ? items[total - 1].textContent : '';
       if (prevCount !== -1 && Math.abs(total - prevCount) > 1) page = 1;   // جست‌وجو/فیلتر → از صفحهٔ اول
-      prevCount = total;
+      else if (prevCount !== -1 && total === prevCount + 1) page = (first !== prevFirst) ? 1 : 1e9;   // ثبت جدید → صفحه‌ای که ردیف تازه در آن است
+      prevCount = total; prevFirst = first; prevLast = last;
       const per = size || total || 1, pages = Math.max(1, Math.ceil(total / per));
       page = Math.min(Math.max(1, page), pages);
       const from = (page - 1) * per, to = from + per;
@@ -210,3 +217,14 @@
     document.querySelectorAll('[data-paginate]').forEach(c => paginate(c, parseInt(c.dataset.paginate, 10) || 10));
   });
 })();
+
+// ================= کمک‌تابع‌های فرم =================
+window.F = {
+  val: id => (document.getElementById(id) || {}).value || '',
+  selText: id => { const s = document.getElementById(id); return s && s.selectedIndex >= 0 ? s.options[s.selectedIndex].text.trim() : ''; },
+  setSelByText: (id, text) => { const s = document.getElementById(id); if (!s) return; const i = [...s.options].findIndex(o => text && o.text.includes(text)); s.selectedIndex = i >= 0 ? i : 0; },
+  nextId: arr => arr.reduce((m, x) => Math.max(m, Number(x.id) || 0), 0) + 1,
+  todayISO: () => new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kabul' }),
+  name: label => label.split(' - ')[0],
+  code: label => (label.split(' - ')[1] || ''),
+};

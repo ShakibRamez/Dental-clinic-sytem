@@ -234,9 +234,16 @@ function openNewInvoice() {
 }
 
 function saveInvoice() {
-  alert("✅ فاکتور با موفقیت صادر شد!");
+  const total = Number(F.val('total_amount')) || 0, discount = Number(F.val('discount')) || 0;
+  if (!F.val('patient_id') || total <= 0) return alert('⚠️ مریض و مبلغ فاکتور را وارد کنید');
+  if (discount > total) return alert('⚠️ تخفیف نمی‌تواند از مبلغ کل بیشتر باشد');
+  const number = F.val('invoice_number').trim() || 'F-' + String(F.nextId(invoices)).padStart(4, '0');
+  invoices.push({ id: F.nextId(invoices), number, patient: F.name(F.selText('patient_id')), total, discount, final: total - discount,
+    status: 'unpaid', date: AF.numeric(), description: F.val('description') });
+  alert('✅ فاکتور با موفقیت صادر شد!');
   bootstrap.Modal.getInstance(document.getElementById('invoiceModal')).hide();
   renderInvoices();
+  updateStats();
 }
 
 function viewInvoice(id) {

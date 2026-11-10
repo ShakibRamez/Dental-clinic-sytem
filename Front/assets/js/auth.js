@@ -5,7 +5,8 @@ const isLoginPage = () => /(^|\/)login(\.html)?\/?$/.test(location.pathname);
 async function getUsers() {
   const res = await fetch('/api/users', { credentials: 'same-origin' });
   if (!res.ok) throw new Error('users ' + res.status);
-  return res.json();
+  const txt = await res.text();
+  try { return JSON.parse(txt); } catch { throw new Error('پاسخ /api/users JSON نیست'); }
 }
 
 async function getCurrentRole() {

@@ -165,19 +165,30 @@ function openNewAppointment() {
 }
 
 function editAppointment(id) {
-  const appt = appointments.find(a => a.id === id);
-  if (!appt) return;
-
+  const a = appointments.find(x => x.id === id);
+  if (!a) return;
   editMode = true;
   document.getElementById('modalTitle').textContent = 'ویرایش نوبت';
-  document.getElementById('edit_id').value = appt.id;
-  
-  // پر کردن فرم (در نسخه واقعی از داده کامل استفاده می‌شود)
+  document.getElementById('edit_id').value = a.id;
+  F.setSelByText('patient_id', a.patient);
+  F.setSelByText('doctor_id', a.doctor);
+  document.getElementById('appointment_date').value = a.iso || F.todayISO();
+  document.getElementById('appointment_time').value = a.time || '';
+  F.setSelByText('appointment_type', a.type);
+  document.getElementById('status').value = a.status;
+  document.getElementById('notes').value = a.notes || '';
   new bootstrap.Modal(document.getElementById('appointmentModal')).show();
 }
 
 function saveAppointment() {
-  alert(editMode ? "✅ نوبت با موفقیت ویرایش شد!" : "✅ نوبت جدید با موفقیت ثبت شد!");
+  const iso = F.val('appointment_date'), time = F.val('appointment_time');
+  if (!F.val('patient_id') || !F.val('doctor_id') || !iso || !time) return alert('⚠️ مریض، داکتر، تاریخ و ساعت را وارد کنید');
+  const label = F.selText('patient_id');
+  const rec = { patient: F.name(label), phone: (appointments.find(a => a.patient === F.name(label)) || {}).phone || '—', doctor: F.selText('doctor_id'),
+    iso, date: AF.numeric(AF.fromISO(iso)), time, type: F.selText('appointment_type'), status: F.val('status'), notes: F.val('notes') };
+  const id = Number(F.val('edit_id'));
+  if (editMode && id) Object.assign(appointments.find(a => a.id === id), rec); else appointments.push({ id: F.nextId(appointments), ...rec });
+  alert(editMode ? '✅ نوبت با موفقیت ویرایش شد!' : '✅ نوبت جدید با موفقیت ثبت شد!');
   bootstrap.Modal.getInstance(document.getElementById('appointmentModal')).hide();
   renderAppointments();
 }
