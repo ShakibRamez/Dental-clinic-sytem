@@ -58,7 +58,7 @@
         <div class="mb-3">
           <label class="form-label fw-bold">جستجوی دارو از انبار</label>
           <input type="text" class="form-control form-control-lg" id="drugSearch" 
-                 placeholder="نام دارو را تایپ کنید..." onkeyup="searchDrugs()">
+                 placeholder="نام دارو را تایپ کنید..." oninput="searchDrugs()">
           <div id="searchResults" class="border rounded mt-1 bg-white" style="display:none; max-height:200px; overflow-y:auto;"></div>
         </div>
 
@@ -246,8 +246,18 @@ function savePrescription() {
 
 // چاپ
 function printPrescription() {
-  updatePreview();
-  window.print();
+  const sel = document.getElementById('patient_id');
+  if (!sel.value) return alert('⚠️ اول مریض را انتخاب کنید');
+  if (!selectedDrugs.length) return alert('⚠️ حداقل یک دارو اضافه کنید');
+  const label = sel.options[sel.selectedIndex].text, name = label.split(' - ')[0], code = label.split(' - ')[1] || '';
+  const rows = selectedDrugs.map((d, i) => `<tr><td class="num">${AF.faDigits(i + 1)}</td><td>${esc(d.name)}</td><td>${esc(d.dosage) || '—'}</td><td class="num">${AF.faDigits(d.quantity)} ${esc(d.unit)}</td></tr>`).join('');
+  const ins = document.getElementById('instructions').value.trim();
+  printDocument('نسخه', printHeader('نسخهٔ طبی') + `
+    <div class="meta"><div><b>مریض:</b> ${esc(name)}${code ? ' <span>(' + esc(code) + ')</span>' : ''}</div><div class="end"><b>تاریخ:</b> ${AF.long()}</div></div>
+    <div class="meta"><div><b>داکتر:</b> ${esc(document.querySelector('input[readonly]').value)}</div></div>
+    <table><thead><tr><th class="num">#</th><th>دارو</th><th>طریقهٔ مصرف</th><th class="num">تعداد</th></tr></thead><tbody>${rows}</tbody></table>
+    ${ins ? `<div class="note"><b>دستورات:</b> ${esc(ins)}</div>` : ''}
+    <div class="sign"><div>امضا و مهر داکتر</div><div>دواخانه</div></div>`, 'A5');
 }
 
 // رویداد تغییر مریض

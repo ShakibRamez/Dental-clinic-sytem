@@ -249,6 +249,7 @@ function saveInvoice() {
 function viewInvoice(id) {
   const inv = invoices.find(i => i.id === id);
   if (!inv) return;
+  window.__inv = inv;
 
   document.getElementById('invoiceDetailBody').innerHTML = `
     <div class="text-center mb-4">
@@ -304,7 +305,17 @@ function viewInvoice(id) {
 }
 
 function printInvoiceDetail() {
-  window.print();
+  const inv = window.__inv; if (!inv) return alert('⚠️ فاکتوری انتخاب نشده');
+  const m = n => AF.faDigits(Number(n).toLocaleString('en-US')) + ' ؋', paid = inv.status === 'paid';
+  printDocument('فاکتور', printHeader('فاکتور رسمی') + `
+    <div class="meta"><div><b>شماره فاکتور:</b> ${esc(inv.number)}</div><div class="end"><b>تاریخ:</b> ${esc(inv.date)}</div></div>
+    <div class="meta"><div><b>مریض:</b> ${esc(inv.patient)}</div></div>
+    <table><thead><tr><th>شرح</th><th class="num">مبلغ</th></tr></thead><tbody>
+      <tr><td>مبلغ کل خدمات</td><td class="num">${m(inv.total)}</td></tr>
+      <tr><td>تخفیف</td><td class="num">${m(inv.discount)}</td></tr>
+      <tr class="total"><td>مبلغ نهایی</td><td class="num">${m(inv.final)}</td></tr></tbody></table>
+    <span class="status">${paid ? 'پرداخت شده' : 'پرداخت نشده'}</span>
+    <div class="sign"><div>امضای مسئول</div><div>امضای مریض</div></div>`, 'A5');
 }
 
 function deleteInvoice(id) {

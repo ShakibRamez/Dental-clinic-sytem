@@ -228,3 +228,44 @@ window.F = {
   name: label => label.split(' - ')[0],
   code: label => (label.split(' - ')[1] || ''),
 };
+
+
+// ================= چاپ: فقط خودِ سند (بدون منو و اطلاعات سیستم) =================
+// سند در یک iframe مخفی و مستقل ساخته و چاپ می‌شود؛ حاشیهٔ صفر هم سرصفحه/پاصفحهٔ مرورگر (آدرس، تاریخ، عنوان) را حذف می‌کند.
+(function () {
+  const CLINIC = () => localStorage.getItem('clinic_name') || 'کلینیک دندانپزشکی امید';
+  const CSS = `
+    @page { size: %SIZE%; margin: 0; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #fff; }
+    body { padding: 14mm 15mm; font-family: 'Vazirmatn', Tahoma, 'Segoe UI', sans-serif; color: #111; font-size: 12px; line-height: 1.8; }
+    .hd { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 8px; margin-bottom: 16px; border-bottom: 1px solid #111; }
+    .hd h1 { margin: 0; font-size: 16px; font-weight: 700; } .hd p { margin: 0; color: #666; font-size: 11px; }
+    .meta { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 4px; color: #333; }
+    .meta div { flex: 1; } .meta .end { text-align: left; } .meta b { color: #777; font-weight: 400; margin-inline-end: 4px; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 10px; }
+    th, td { padding: 7px 4px; text-align: right; vertical-align: top; border-bottom: 1px solid #ddd; }
+    th { color: #777; font-weight: 400; font-size: 11px; border-bottom: 1px solid #111; }
+    td.num, th.num { text-align: left; white-space: nowrap; }
+    tr.total td { font-weight: 700; border-top: 1px solid #111; border-bottom: 0; }
+    .note { margin-top: 12px; color: #333; } .note b { color: #777; font-weight: 400; }
+    .status { display: inline-block; margin-top: 8px; padding: 1px 10px; border: 1px solid #111; border-radius: 99px; font-size: 11px; }
+    .sign { display: flex; justify-content: space-between; margin-top: 44px; color: #777; font-size: 11px; }
+    .sign div { width: 38%; text-align: center; border-top: 1px solid #aaa; padding-top: 4px; }
+    .ft { margin-top: 22px; text-align: center; font-size: 10.5px; color: #999; }
+    tr, .note { break-inside: avoid; }`;
+  window.printDocument = function (title, bodyHtml, size) {
+    const f = document.createElement('iframe');
+    f.setAttribute('aria-hidden', 'true'); f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';
+    document.body.appendChild(f);
+    const d = f.contentDocument; d.open();
+    d.write(`<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><title>${esc(title)}</title>
+      <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+      <style>${CSS.replace('%SIZE%', size || 'A5')}</style></head><body>${bodyHtml}</body></html>`);
+    d.close();
+    window.__lastPrintHtml = d.documentElement.outerHTML;          // (برای تست)
+    const go = () => { try { f.contentWindow.focus(); f.contentWindow.print(); } finally { setTimeout(() => f.remove(), 2000); } };
+    Promise.race([d.fonts ? d.fonts.ready : Promise.resolve(), new Promise(r => setTimeout(r, 1200))]).then(() => setTimeout(go, 120));
+  };
+  window.printHeader = (sub) => `<div class="hd"><h1>${esc(CLINIC())}</h1><p>${esc(sub || '')}</p></div>`;
+})();
